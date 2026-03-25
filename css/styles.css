@@ -199,6 +199,10 @@ body {
 /* =============================================
    BUTTONS
    ============================================= */
+button {
+  pointer-events: auto;
+}
+
 .btn-primary {
   background: var(--green);
   color: #fff;
@@ -212,6 +216,7 @@ body {
   transition: background 0.15s;
   text-decoration: none;
   display: inline-block;
+  pointer-events: auto;
 }
 
 .btn-primary:hover {
@@ -235,6 +240,7 @@ body {
   transition: all 0.15s;
   text-decoration: none;
   display: inline-block;
+  pointer-events: auto;
 }
 
 .btn-secondary:hover {
@@ -255,6 +261,7 @@ body {
   transition: background 0.15s;
   text-decoration: none;
   display: inline-block;
+  pointer-events: auto;
 }
 
 .btn:hover {
@@ -274,6 +281,7 @@ body {
   transition: all 0.15s;
   text-decoration: none;
   display: inline-block;
+  pointer-events: auto;
 }
 
 .btn-enter:hover {
@@ -328,7 +336,7 @@ body {
 
 .modal-overlay.active {
   opacity: 1;
-  pointer-events: all;
+  pointer-events: auto;
 }
 
 .modal {
@@ -340,6 +348,7 @@ body {
   max-width: 460px;
   position: relative;
   animation: fadeUp 0.3s ease both;
+  pointer-events: auto;
 }
 
 .modal::before {
@@ -380,6 +389,7 @@ body {
   outline: none;
   transition: border-color 0.2s;
   margin-bottom: 1.2rem;
+  pointer-events: auto;
 }
 
 .modal-input:focus {
@@ -403,6 +413,7 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s;
+  pointer-events: auto;
 }
 
 .modal-btn:hover {
@@ -657,6 +668,7 @@ select {
   transition: border-color 0.2s;
   width: 100%;
   margin-bottom: 1rem;
+  pointer-events: auto;
 }
 
 input:focus,
