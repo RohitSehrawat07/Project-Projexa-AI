@@ -85,26 +85,57 @@ function getTier(elo) {
 // ── Get tier color ──
 function getTierColor(tier) {
   const colors = {
-    "Diamond": "#00e5ff",
-    "Gold":    "#f5c842",
-    "Silver":  "#aab4c8",
-    "Bronze":  "#cd7f32"
+    "Diamond": "#a855f7",
+    "Gold":    "#81b64c",
+    "Silver":  "#4a9fd4",
+    "Bronze":  "#c4771b"
   };
-  return colors[tier] || "#888899";
+  return colors[tier] || "#999693";
 }
 
 // ── Protect page — redirect to index if not logged in ──
 function requireLogin() {
   const name = localStorage.getItem("edurank_current");
   if (!name) {
-    window.location.href = "../index.html";
+    window.location.href = "index.html";
   }
 }
 
 // ── Logout ──
 function logout() {
   localStorage.removeItem("edurank_current");
-  window.location.href = "../index.html";
+  window.location.href = "index.html";
+}
+
+// ── Predict student performance ──
+function predictStudent(s) {
+  const score = (s.accuracy * 0.4)
+    + (Math.min(s.streak * 3, 30) * 0.3)
+    + (s.speed * 4 * 0.2)
+    + (s.activity * 0.1);
+  if (score >= 75) return { label:"Excellent", icon:"🌟", color:"#81b64c" };
+  if (score >= 55) return { label:"Good",      icon:"✅", color:"#4a9fd4" };
+  if (score >= 35) return { label:"Average",   icon:"⚠️",  color:"#f6f669" };
+  return              { label:"At Risk",   icon:"🚨", color:"#e44d4d" };
+}
+
+// ── Save match result to history ──
+function saveMatchResult(result) {
+  let history = JSON.parse(
+    localStorage.getItem('edurank_match_history') || '[]'
+  );
+  history.unshift(result);
+  if (history.length > 20) history = history.slice(0, 20);
+  localStorage.setItem(
+    'edurank_match_history', JSON.stringify(history)
+  );
+}
+
+// ── Get match history ──
+function getMatchHistory() {
+  return JSON.parse(
+    localStorage.getItem('edurank_match_history') || '[]'
+  );
 }
 
 // Init on load

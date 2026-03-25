@@ -50,8 +50,21 @@ function enterPlatform() {
         return;
     }
     
-    // Store name in localStorage
-    localStorage.setItem('userName', name);
+    // Check if student exists
+    const students = getAllStudents();
+    const exists = students.find(
+      s => s.name.toLowerCase() === name.toLowerCase()
+    );
+    
+    if (exists) {
+      // Student exists — use their exact stored name
+      setCurrentStudent(exists.name);
+    } else {
+      // New student — capitalize first letter
+      const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      addStudent(capitalizedName);
+      setCurrentStudent(capitalizedName);
+    }
     
     // Redirect to dashboard
     window.location.href = 'dashboard.html';

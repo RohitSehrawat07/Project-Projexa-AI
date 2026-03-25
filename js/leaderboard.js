@@ -1,6 +1,4 @@
-function getTier(elo){if(elo>=2000)return"Diamond";if(elo>=1800)return"Gold";if(elo>=1500)return"Silver";return"Bronze";}
-  function getTierColor(t){return{Diamond:"#00e5ff",Gold:"#f5c842",Silver:"#aab4c8",Bronze:"#cd7f32"}[t]||"#888";}
-  window.onload=function(){
+window.onload=function(){
     const name=localStorage.getItem('edurank_current');
     if(!name){window.location.href='index.html';return;}
     const students=JSON.parse(localStorage.getItem('edurank_students')||'[]');

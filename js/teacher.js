@@ -1,19 +1,12 @@
-function getTier(elo){if(elo>=2000)return"Diamond";if(elo>=1800)return"Gold";if(elo>=1500)return"Silver";return"Bronze";}
-  function getTierColor(t){return{Diamond:"#00e5ff",Gold:"#f5c842",Silver:"#aab4c8",Bronze:"#cd7f32"}[t]||"#888";}
-  function predict(s){
-    let score=(s.accuracy*0.4)+(Math.min(s.streak*3,30)*0.3)+(s.speed*4*0.2)+(s.activity*0.1);
-    if(score>=75)return{label:"Excellent",icon:"🌟",color:"#00e5ff"};
-    if(score>=55)return{label:"Good",icon:"✅",color:"#00d68f"};
-    if(score>=35)return{label:"Average",icon:"⚠️",color:"#f5c842"};
-    return{label:"At Risk",icon:"🚨",color:"#ff3b5c"};
-  }
-  window.onload=function(){
+window.onload=function(){
     const name=localStorage.getItem('edurank_current');
     if(!name){window.location.href='index.html';return;}
     const students=JSON.parse(localStorage.getItem('edurank_students')||'[]');
     const sorted=[...students].sort((a,b)=>b.elo-a.elo);
-    const preds=students.map(s=>predict(s));
-    const atRisk=students.filter((s,i)=>preds[i].label==="At Risk");
+    const preds=students.map(s=>predictStudent(s));
+    const atRisk=students.filter(
+      s => predictStudent(s).label === "At Risk"
+    );
     const avgElo=Math.round(students.reduce((a,s)=>a+s.elo,0)/students.length);
     const avgAcc=Math.round(students.reduce((a,s)=>a+s.accuracy,0)/students.length);
 
@@ -46,7 +39,7 @@ function getTier(elo){if(elo>=2000)return"Diamond";if(elo>=1800)return"Gold";if(
     document.getElementById('classTable').innerHTML=sorted.map((s,i)=>{
       const tier=getTier(s.elo);
       const col=getTierColor(tier);
-      const p=predict(s);
+      const p=predictStudent(s);
       return`<div class="tr" style="animation:fadeUp 0.4s ${i*0.06}s ease both;opacity:0">
         <div class="td-rank">${i+1}</div>
         <div class="td-name">${s.name}</div>

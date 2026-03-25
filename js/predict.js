@@ -1,16 +1,10 @@
-function predict(s){
-    let score=(s.accuracy*0.4)+(Math.min(s.streak*3,30)*0.3)+(s.speed*4*0.2)+(s.activity*0.1);
-    if(score>=75)return{label:"Excellent",icon:"🌟",color:"#00e5ff"};
-    if(score>=55)return{label:"Good",icon:"✅",color:"#00d68f"};
-    if(score>=35)return{label:"Average",icon:"⚠️",color:"#f5c842"};
-    return{label:"At Risk",icon:"🚨",color:"#ff3b5c"};
-  }
-  function factors(s){
+// ── Factor calculations for prediction ──
+function factors(s){
     return[
-      {name:"Accuracy",val:s.accuracy,color:"#00e5ff",weight:"40%"},
-      {name:"Streak",val:Math.min(s.streak*8,100),color:"#f5c842",weight:"30%"},
-      {name:"Speed",val:s.speed*10,color:"#00d68f",weight:"20%"},
-      {name:"Activity",val:s.activity,color:"#a855f7",weight:"10%"},
+      {name:"Accuracy",val:s.accuracy,color:"#4a9fd4",weight:"40%"},
+      {name:"Streak",val:Math.min(s.streak*8,100),color:"#f6f669",weight:"30%"},
+      {name:"Speed",val:s.speed*10,color:"#81b64c",weight:"20%"},
+      {name:"Activity",val:s.activity,color:"#62b0e8",weight:"10%"},
     ];
   }
   window.onload=function(){
@@ -20,7 +14,7 @@ function predict(s){
     const me=students.find(s=>s.name.toLowerCase()===name.toLowerCase());
 
     if(me){
-      const p=predict(me);
+      const p=predictStudent(me);
       const f=factors(me);
       document.getElementById('myPred').innerHTML=`
         <div class="my-pred-name">Your Prediction · ${me.name}</div>
@@ -44,7 +38,7 @@ function predict(s){
 
     const grid=document.getElementById('classGrid');
     grid.innerHTML=students.map((s,i)=>{
-      const p=predict(s);
+      const p=predictStudent(s);
       const f=factors(s);
       const isYou=s.name.toLowerCase()===name.toLowerCase();
       return`<div class="student-card" style="animation:fadeUp 0.4s ${i*0.07}s ease both;opacity:0">
