@@ -18,16 +18,26 @@
 .hero-grid-bg {
     position: absolute;
     inset: 0;
-    /* Chess board pattern */
+    /* Enhanced Chess board pattern */
     background-color: var(--bg);
     background-image: 
-        linear-gradient(45deg, rgba(245, 200, 66, 0.08) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(245, 200, 66, 0.08) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(245, 200, 66, 0.08) 75%),
-        linear-gradient(-45deg, transparent 75%, rgba(245, 200, 66, 0.08) 75%);
-    background-size: 80px 80px;
-    background-position: 0 0, 0 40px, 40px -40px, -40px 0px;
-    opacity: 0.15;
+        linear-gradient(45deg, rgba(245, 200, 66, 0.12) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(245, 200, 66, 0.12) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(245, 200, 66, 0.12) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(245, 200, 66, 0.12) 75%);
+    background-size: 100px 100px;
+    background-position: 0 0, 0 50px, 50px -50px, -50px 0px;
+    opacity: 0.25;
+    animation: chessBoardShift 20s ease-in-out infinite;
+}
+
+@keyframes chessBoardShift {
+    0%, 100% {
+        opacity: 0.25;
+    }
+    50% {
+        opacity: 0.35;
+    }
 }
 
 .hero-glow {
@@ -36,8 +46,9 @@
     right: 10%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(245, 200, 66, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(245, 200, 66, 0.12) 0%, transparent 70%);
     pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
 }
 
 .hero-glow2 {
@@ -46,8 +57,57 @@
     left: 5%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(0, 229, 255, 0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.10) 0%, transparent 70%);
     pointer-events: none;
+    animation: pulse 5s ease-in-out infinite 0.5s;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* CHESS PIECE DECORATIONS */
+.chess-piece {
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 0 20px rgba(245, 200, 66, 0.3));
+}
+
+.chess-piece-1 {
+    top: 15%;
+    left: 8%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.chess-piece-2 {
+    top: 60%;
+    right: 5%;
+    animation: float 7s ease-in-out infinite 1s;
+    font-size: 3.5rem;
+}
+
+.chess-piece-3 {
+    bottom: 20%;
+    right: 20%;
+    animation: float 8s ease-in-out infinite 2s;
+    font-size: 3rem;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 .hero-left {
@@ -180,7 +240,41 @@
 }
 
 .elo-bar-wrap {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+.trend-graph {
+    margin-top: 2rem;
+    padding: 1.2rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.trend-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+}
+
+.trend-chart {
+    width: 100%;
+    height: 80px;
+    filter: drop-shadow(0 0 8px rgba(245, 200, 66, 0.1));
+    animation: slideIn 1.2s ease both;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .elo-bar-label {
@@ -298,6 +392,65 @@
 
 .lb-delta.neg {
     color: var(--red);
+}
+
+/* PERFORMANCE DEMO CARD */
+.performance-card {
+    margin-top: 1px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.perf-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+}
+
+.perf-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.perf-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.perf-day {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    width: 2.5rem;
+}
+
+.perf-bar-container {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.perf-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease both;
+}
+
+.perf-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    width: 2rem;
+    text-align: right;
 }
 
 /* FEATURES */

@@ -25,6 +25,12 @@
   <div class="hero-grid-bg"></div>
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
+  
+  <!-- CHESS PIECE DECORATIONS -->
+  <div class="chess-piece chess-piece-1">♔</div>
+  <div class="chess-piece chess-piece-2">♕</div>
+  <div class="chess-piece chess-piece-3">♗</div>
+  
   <div class="hero-left">
     <div class="hero-tag">IoT Academic Platform · BCA AI &amp; Data Science</div>
     <h1 class="hero-title">
@@ -38,6 +44,7 @@
     </div>
   </div>
   <div class="hero-right">
+    <!-- ELO CARD WITH TREND GRAPH -->
     <div class="elo-card">
       <div class="elo-card-header">
         <div class="elo-card-title">Your ELO Rating</div>
@@ -45,6 +52,30 @@
       </div>
       <div class="elo-number" id="heroElo">1,842</div>
       <div class="elo-change">▲ +47 pts this week</div>
+      
+      <!-- TREND GRAPH -->
+      <div class="trend-graph">
+        <div class="trend-label">7-Day Progression</div>
+        <svg viewBox="0 0 280 80" class="trend-chart">
+          <polyline points="10,60 40,45 70,50 100,35 130,40 160,25 210,15" 
+                    fill="none" stroke="url(#gradientLine)" stroke-width="3" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="gradientLine" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:var(--gold);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:var(--cyan);stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <!-- Data points -->
+          <circle cx="10" cy="60" r="3" fill="var(--gold)" opacity="0.6"/>
+          <circle cx="40" cy="45" r="3" fill="var(--gold)" opacity="0.7"/>
+          <circle cx="70" cy="50" r="3" fill="var(--gold)" opacity="0.8"/>
+          <circle cx="100" cy="35" r="3" fill="var(--cyan)" opacity="0.8"/>
+          <circle cx="130" cy="40" r="3" fill="var(--cyan)" opacity="0.9"/>
+          <circle cx="160" cy="25" r="3" fill="var(--cyan)" opacity="0.95"/>
+          <circle cx="210" cy="15" r="3" fill="var(--cyan)"/>
+        </svg>
+      </div>
+
       <div class="elo-bar-wrap">
         <div class="elo-bar-label"><span>Gold · 1800</span><span>Platinum · 2000</span></div>
         <div class="elo-bar"><div class="elo-bar-fill"></div></div>
@@ -55,6 +86,49 @@
         <div class="elo-stat"><div class="elo-stat-val">3rd</div><div class="elo-stat-key">Class Rank</div></div>
       </div>
     </div>
+
+    <!-- PERFORMANCE DEMO CARD -->
+    <div class="performance-card">
+      <div class="perf-header">Weekly Performance</div>
+      <div class="perf-chart">
+        <div class="perf-row">
+          <span class="perf-day">Mon</span>
+          <div class="perf-bar-container">
+            <div class="perf-bar" style="width: 75%; background: rgba(245, 200, 66, 0.7);"></div>
+          </div>
+          <span class="perf-val">75%</span>
+        </div>
+        <div class="perf-row">
+          <span class="perf-day">Tue</span>
+          <div class="perf-bar-container">
+            <div class="perf-bar" style="width: 88%; background: rgba(0, 229, 255, 0.7);"></div>
+          </div>
+          <span class="perf-val">88%</span>
+        </div>
+        <div class="perf-row">
+          <span class="perf-day">Wed</span>
+          <div class="perf-bar-container">
+            <div class="perf-bar" style="width: 92%; background: rgba(0, 213, 143, 0.7);"></div>
+          </div>
+          <span class="perf-val">92%</span>
+        </div>
+        <div class="perf-row">
+          <span class="perf-day">Thu</span>
+          <div class="perf-bar-container">
+            <div class="perf-bar" style="width: 85%; background: rgba(245, 200, 66, 0.7);"></div>
+          </div>
+          <span class="perf-val">85%</span>
+        </div>
+        <div class="perf-row">
+          <span class="perf-day">Fri</span>
+          <div class="perf-bar-container">
+            <div class="perf-bar" style="width: 94%; background: rgba(0, 229, 255, 0.7);"></div>
+          </div>
+          <span class="perf-val">94%</span>
+        </div>
+      </div>
+    </div>
+
     <div class="leaderboard-mini">
       <div class="lb-row"><div class="lb-rank top">1</div><div class="lb-name">Priya Sharma</div><div class="lb-elo">2,104</div><div class="lb-delta">+62</div></div>
       <div class="lb-row"><div class="lb-rank top">2</div><div class="lb-name">Rahul Verma</div><div class="lb-elo">1,988</div><div class="lb-delta">+19</div></div>
