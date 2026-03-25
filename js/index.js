@@ -10,9 +10,9 @@ function openModal() {
     const error = document.getElementById('modalError');
     
     if (modal) {
-        modal.style.display = 'flex';
-        error.style.display = 'none';
-        nameInput.focus();
+        modal.classList.add('active');
+        if (error) error.style.display = 'none';
+        if (nameInput) nameInput.focus();
     }
 }
 
@@ -22,7 +22,7 @@ function openModal() {
 function closeModal() {
     const modal = document.getElementById('modalOverlay');
     if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('active');
     }
 }
 
@@ -45,7 +45,7 @@ function enterPlatform() {
     const name = nameInput.value.trim();
     
     if (!name || name.length === 0) {
-        error.style.display = 'block';
+        if (error) error.style.display = 'block';
         nameInput.focus();
         return;
     }
@@ -61,11 +61,10 @@ function enterPlatform() {
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('modalOverlay');
     const nameInput = document.getElementById('nameInput');
-    const enterBtn = document.querySelector('.modal-btn');
     
-    if (modal && nameInput && enterBtn) {
-        // Close modal by default on page load
-        modal.style.display = 'none';
+    if (modal && nameInput) {
+        // Ensure modal starts hidden
+        modal.classList.remove('active');
         
         // Allow Enter key to submit
         nameInput.addEventListener('keydown', function(e) {
@@ -73,5 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 enterPlatform();
             }
         });
+        
+        console.log('EduRank initialized successfully');
     }
 });
