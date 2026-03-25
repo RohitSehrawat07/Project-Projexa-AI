@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduRank — Chess.com for Students</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Edu<span>Rank</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#about">About</a>
+  </div>
+  <button class="btn-enter" onclick="openModal()">Enter EduRank →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-left">
+    <div class="hero-tag">IoT Academic Platform · BCA AI &amp; Data Science</div>
+    <h1 class="hero-title">
+      <span class="small">Introducing</span>
+      <span class="accent">EduRank</span>
+      Chess.com<br>for Students
+    </h1>
+    <p class="hero-sub">A <strong>competitive, gamified learning platform</strong> with live ELO rankings, daily challenges, peer vs peer matches, and an AI engine that predicts your academic trajectory.</p>
+    <div class="hero-actions">
+      <button class="btn-enter" onclick="openModal()">Enter EduRank →</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="elo-card">
+      <div class="elo-card-header">
+        <div class="elo-card-title">Your ELO Rating</div>
+        <div class="tier-badge">⬡ GOLD</div>
+      </div>
+      <div class="elo-number" id="heroElo">1,842</div>
+      <div class="elo-change">▲ +47 pts this week</div>
+      <div class="elo-bar-wrap">
+        <div class="elo-bar-label"><span>Gold · 1800</span><span>Platinum · 2000</span></div>
+        <div class="elo-bar"><div class="elo-bar-fill"></div></div>
+      </div>
+      <div class="elo-stats">
+        <div class="elo-stat"><div class="elo-stat-val">94%</div><div class="elo-stat-key">Accuracy</div></div>
+        <div class="elo-stat"><div class="elo-stat-val">12</div><div class="elo-stat-key">Day Streak</div></div>
+        <div class="elo-stat"><div class="elo-stat-val">3rd</div><div class="elo-stat-key">Class Rank</div></div>
+      </div>
+    </div>
+    <div class="leaderboard-mini">
+      <div class="lb-row"><div class="lb-rank top">1</div><div class="lb-name">Priya Sharma</div><div class="lb-elo">2,104</div><div class="lb-delta">+62</div></div>
+      <div class="lb-row"><div class="lb-rank top">2</div><div class="lb-name">Rahul Verma</div><div class="lb-elo">1,988</div><div class="lb-delta">+19</div></div>
+      <div class="lb-row" style="background:rgba(245,200,66,0.04)"><div class="lb-rank" style="color:var(--gold)">3</div><div class="lb-name" style="color:var(--gold)">Aman Rawat ←</div><div class="lb-elo">1,842</div><div class="lb-delta">+47</div></div>
+      <div class="lb-row"><div class="lb-rank">4</div><div class="lb-name">Sneha Gupta</div><div class="lb-elo">1,720</div><div class="lb-delta neg">-11</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">// Core Features</div>
+  <h2 class="section-title">Built for <span class="dim">Competitive</span> Excellence</h2>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">♟</div><div class="feature-title">Live ELO Ranking</div><div class="feature-desc">Dynamic ratings that rise and fall with every quiz. Five tiers — Bronze to Diamond — give students a living, honest grade.</div></div>
+    <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Daily Challenges</div><div class="feature-desc">One question every day. Correct answers boost ELO. Streak milestones unlock badges and bonuses.</div></div>
+    <div class="feature-card"><div class="feature-icon">🤖</div><div class="feature-title">AI Prediction</div><div class="feature-desc">Weighted ML model analyzes accuracy, streaks, and speed to forecast At Risk, Average, Good, or Excellent outcomes.</div></div>
+    <div class="feature-card"><div class="feature-icon">🔬</div><div class="feature-title">Match Review</div><div class="feature-desc">Post-quiz breakdowns show per-question time, class comparisons, and pinpoint academic Blunders and Great Moves.</div></div>
+    <div class="feature-card"><div class="feature-icon">⚔</div><div class="feature-title">Head-to-Head</div><div class="feature-desc">Challenge peers directly. ELO adjusts by opponent strength — fair, social, and highly motivating.</div></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Teacher Dashboard</div><div class="feature-desc">Rating heatmaps and automated at-risk alerts give educators real-time intelligence to intervene early.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer id="about">
+  <div>
+    <div class="footer-logo">EduRank</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;font-family:'Space Mono',monospace;">Chess.com for Students</div>
+  </div>
+  <div class="footer-meta">
+    <div>Minor Project · BCA AI &amp; Data Science · K.R Mangalam University</div>
+    <div>by <strong>Aman Rawat</strong> · <strong>Rohit</strong> · <strong>Dev</strong> · <strong>Vansh</strong> · <strong>Dhruv</strong></div>
+    <div>Supervised by <strong>Digvijay Singh</strong> · January 2026</div>
+  </div>
+</footer>
+
+<!-- NAME ENTRY MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-title">Enter EduRank</div>
+    <div class="modal-sub">Type your name to enter the platform. Your ELO, streak, and rank will load automatically.</div>
+    <input class="modal-input" id="nameInput" type="text" placeholder="Your name (e.g. Aman)" maxlength="30" onkeydown="if(event.key==='Enter') enterPlatform()">
+    <button class="modal-btn" onclick="enterPlatform()">Enter Platform →</button>
+    <div class="modal-error" id="modalError">Please enter your name to continue.</div>
+  </div>
+</div>
+
+<script src="js/index.js"></script>
+</body>
+</html>

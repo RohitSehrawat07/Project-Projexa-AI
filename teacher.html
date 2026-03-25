@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduRank — Teacher Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/teacher.css">
+<script src="js/storage.js"></script>
+<script src="js/teacher.js"></script>
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html" class="logo">Edu<span>Rank</span></a>
+  <a href="dashboard.html" class="back-btn">← Dashboard</a>
+</nav>
+<div class="main">
+  <div class="page-label">// Teacher View — Restricted</div>
+  <div class="page-title">📊 Class Intelligence</div>
+
+  <!-- STATS -->
+  <div class="stats-row anim" id="statsRow"></div>
+
+  <!-- AT RISK ALERTS -->
+  <div class="section-title">🚨 At-Risk Alerts</div>
+  <div class="alerts-wrap" id="alertsWrap"></div>
+
+  <!-- FULL CLASS TABLE -->
+  <div class="section-title">Full Class Overview</div>
+  <div class="table-wrap">
+    <div class="thead">
+      <div class="th">#</div>
+      <div class="th">Student</div>
+      <div class="th">Tier</div>
+      <div class="th">ELO</div>
+      <div class="th">Accuracy</div>
+      <div class="th">Streak</div>
+      <div class="th">Quizzes</div>
+      <div class="th">Prediction</div>
+    </div>
+    <div id="classTable"></div>
+  </div>
+</div>
+</body>
+</html>
