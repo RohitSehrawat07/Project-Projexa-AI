@@ -1,0 +1,603 @@
+/* ================================================
+   TOURNAMENT CSS
+   Styling for tournament.html and tournament_match.html
+   ================================================ */
+
+:root {
+  --primary: #6366f1;
+  --secondary: #ec4899;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --dark: #1f2937;
+  --light: #f9fafb;
+  --border: #e5e7eb;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── HEADER ── */
+.tournament-header {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-left h1 {
+  font-size: 28px;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.header-left p {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.header-right {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #db2777;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.active {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.status-badge.waiting {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.status-badge.completed {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+}
+
+/* ── TOURNAMENT JOIN SECTION ── */
+.tournament-join {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.join-content {
+  text-align: center;
+}
+
+.join-content h2 {
+  font-size: 20px;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.join-content p {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.players-list {
+  background: var(--light);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.players-list h3 {
+  font-size: 14px;
+  color: var(--dark);
+  margin-bottom: 12px;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.player-chip {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-chip.you {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ── TOURNAMENT CONTROLS ── */
+.tournament-controls {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.tournament-controls h2 {
+  font-size: 20px;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+/* ── TOURNAMENT TABLE ── */
+.tournament-table {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.table-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 60px 1fr 80px 80px 100px;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 80px 80px 100px;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.table-row:hover {
+  background: var(--light);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.rank {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 16px;
+}
+
+.rank.r1 {
+  color: #fbbf24;
+  font-size: 18px;
+}
+
+.rank.r2 {
+  color: #a8a29e;
+}
+
+.rank.r3 {
+  color: #d97706;
+}
+
+.player-name {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.player-name.self {
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tier-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+}
+
+.elo-value {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 14px;
+}
+
+.points-value {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* ── MATCHES SECTION ── */
+.matches-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.matches-section h2 {
+  font-size: 20px;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.match-card {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.match-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-4px);
+}
+
+.match-card.completed {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.02);
+}
+
+.match-card.pending {
+  border-color: var(--warning);
+  background: rgba(245, 158, 11, 0.02);
+}
+
+.match-players {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.player-info {
+  flex: 1;
+  text-align: center;
+}
+
+.player-info-name {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 14px;
+}
+
+.player-info-elo {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.match-vs {
+  color: var(--border);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.match-result {
+  background: var(--light);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.match-result p {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.result-status {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.result-status.draw {
+  color: var(--warning);
+}
+
+.result-status.completed {
+  color: var(--success);
+}
+
+.match-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.match-actions button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.match-actions .btn-play {
+  background: var(--primary);
+  color: white;
+}
+
+.match-actions .btn-play:hover {
+  background: #4f46e5;
+}
+
+.match-actions .btn-view {
+  background: var(--light);
+  color: var(--primary);
+  border: 1px solid var(--border);
+}
+
+.match-actions .btn-view:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* ── MATCH PAGE ── */
+.match-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.match-player {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.match-player h2 {
+  font-size: 24px;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.match-player-elo {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.vs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.vs-text {
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .match-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .vs-divider {
+    min-height: 60px;
+    padding: 16px;
+  }
+  
+  .tournament-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-right {
+    width: 100%;
+  }
+  
+  .table-header,
+  .table-row {
+    grid-template-columns: 40px 1fr 60px 60px 80px;
+    gap: 8px;
+    font-size: 12px;
+  }
+  
+  .matches-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.match-card {
+  animation: fadeIn 0.4s ease both;
+}
+
+.match-card:nth-child(1) { animation-delay: 0s; }
+.match-card:nth-child(2) { animation-delay: 0.1s; }
+.match-card:nth-child(3) { animation-delay: 0.2s; }
+.match-card:nth-child(4) { animation-delay: 0.3s; }
+.match-card:nth-child(5) { animation-delay: 0.4s; }
+
+.table-row {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ── LOADING STATE ── */
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── ERROR STATE ── */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+/* ── SUCCESS STATE ── */
+.success-message {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}

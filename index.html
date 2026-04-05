@@ -17,7 +17,7 @@
     <a href="#features">Features</a>
     <a href="#about">About</a>
   </div>
-  <button class="btn-secondary" onclick="openModal()">Login / Join</button>
+  <button class="btn-secondary" onclick="openAuthModal()">Login / Join</button>
 </nav>
 
 <!-- HERO -->
@@ -169,19 +169,66 @@
   </div>
 </footer>
 
-<!-- NAME ENTRY MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-  <div class="modal">
-    <div class="modal-title">Enter EduRank</div>
-    <div class="modal-sub">Type your name to enter the platform. Your ELO, streak, and rank will load automatically.</div>
-    <input class="modal-input" id="nameInput" type="text" placeholder="Your name (e.g. Aman)" maxlength="30" onkeydown="if(event.key==='Enter') enterPlatform()">
-    <button class="modal-btn" onclick="enterPlatform()">Enter Platform →</button>
-    <div class="modal-error" id="modalError">Please enter your name to continue.</div>
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal" onclick="closeAuthModal(event)">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="closeAuthModal()" title="Close">✕</button>
+    
+    <!-- LOGIN TAB -->
+    <div id="loginTab" class="auth-tab active">
+      <h2>Login to EduRank</h2>
+      <p class="auth-subtitle">Enter your name to continue</p>
+      
+      <input 
+        type="text" 
+        id="loginInput" 
+        class="auth-input" 
+        placeholder="Your full name" 
+        maxlength="50"
+        onkeydown="if(event.key==='Enter') handleLogin()"
+      >
+      
+      <button class="btn-primary auth-btn" onclick="handleLogin()" id="loginBtn">
+        <span id="loginBtnText">Login</span>
+        <span id="loginSpinner" style="display:none;">⏳</span>
+      </button>
+      
+      <div id="loginError" class="auth-error"></div>
+      
+      <div class="auth-switch">
+        New to EduRank? <a href="#" onclick="switchTab('signup'); return false;">Create Account</a>
+      </div>
+    </div>
+    
+    <!-- SIGNUP TAB -->
+    <div id="signupTab" class="auth-tab">
+      <h2>Create Account</h2>
+      <p class="auth-subtitle">Welcome to EduRank!</p>
+      
+      <input 
+        type="text" 
+        id="signupInput" 
+        class="auth-input" 
+        placeholder="Your full name" 
+        maxlength="50"
+        onkeydown="if(event.key==='Enter') handleSignup()"
+      >
+      
+      <button class="btn-primary auth-btn" onclick="handleSignup()" id="signupBtn">
+        <span id="signupBtnText">Create Account</span>
+        <span id="signupSpinner" style="display:none;">⏳</span>
+      </button>
+      
+      <div id="signupError" class="auth-error"></div>
+      
+      <div class="auth-switch">
+        Already a member? <a href="#" onclick="switchTab('login'); return false;">Login</a>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="js/storage.js"></script>
-<script src="js/elo.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

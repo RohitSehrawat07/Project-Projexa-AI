@@ -1,7 +1,7 @@
-window.onload=function(){
+window.onload=async function(){
     const name=localStorage.getItem('edurank_current');
     if(!name){window.location.href='index.html';return;}
-    const students=JSON.parse(localStorage.getItem('edurank_students')||'[]');
+    const students=await getAllStudents();
     const sorted=[...students].sort((a,b)=>b.elo-a.elo);
     const preds=students.map(s=>predictStudent(s));
     const atRisk=students.filter(

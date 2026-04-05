@@ -226,6 +226,10 @@
   background: linear-gradient(90deg, #aab4c8, transparent);
 }
 
+.nav-card.orange::after {
+  background: linear-gradient(90deg, #f97316, transparent);
+}
+
 .nav-card:hover::after {
   transform: scaleX(1);
 }

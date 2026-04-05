@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament · EduRank</title>
+    <link rel="stylesheet" href="css/tournament.css">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="tournament-header">
+            <div class="header-left">
+                <h1>🏆 Tournament</h1>
+                <p id="headerStatus">Loading tournament data...</p>
+            </div>
+            <div class="header-right">
+                <span class="status-badge" id="tournamentBadge">Loading...</span>
+                <button class="btn btn-secondary" onclick="goBack()">← Back</button>
+            </div>
+        </div>
+
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <div id="messageBox"></div>
+
+        <!-- JOIN TOURNAMENT SECTION (HIDDEN WHEN RUNNING) -->
+        <div id="joinSection" class="tournament-join" style="display:none">
+            <div class="join-content">
+                <h2>📋 Tournament Registration</h2>
+                
+                <div id="joinStatus">
+                    <p id="joinMessage"></p>
+                    <div class="players-list">
+                        <h3>Players Joined (<span id="playerCount">0</span>)</h3>
+                        <div class="players-grid" id="playersList"></div>
+                    </div>
+                </div>
+
+                <div id="joinActions" style="margin-top: 20px; display: flex; gap: 12px; justify-content: center;">
+                    <button class="btn btn-primary" id="joinBtn" onclick="onJoinTournament()">
+                        ✅ Join Tournament
+                    </button>
+                    <button class="btn btn-success" id="startBtn" onclick="onStartTournament()" style="display:none">
+                        🎮 Start Tournament
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOURNAMENT CONTROLS (SHOWN WHEN RUNNING) -->
+        <div id="controlsSection" class="tournament-controls" style="display:none">
+            <h2>⚙️ Tournament Control</h2>
+            <p id="controlsMessage" style="color: #6b7280; margin-bottom: 16px;">Tournament is in progress...</p>
+            <button class="btn btn-danger" onclick="onResetTournament()">
+                🔄 Reset Tournament
+            </button>
+        </div>
+
+        <!-- STANDINGS TABLE -->
+        <div id="standingsSection" class="tournament-table" style="display:none">
+            <div class="table-header">
+                <div>Rank</div>
+                <div>Player</div>
+                <div>Tier</div>
+                <div>ELO</div>
+                <div>Points</div>
+            </div>
+            <div id="standingsTable"></div>
+        </div>
+
+        <!-- MATCHES GRID -->
+        <div id="matchesSection" class="matches-section" style="display:none">
+            <h2>⚔️ Matches</h2>
+            <div id="matchesGrid"></div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" style="text-align: center; padding: 60px 20px;">
+            <p style="color: white; font-size: 18px; margin-bottom: 20px;">No tournament in progress</p>
+            <button class="btn btn-primary" onclick="location.reload()">
+                Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/storage.js"></script>
+    <script src="js/tournament.js"></script>
+</body>
+</html>

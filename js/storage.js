@@ -1,35 +1,68 @@
 // =============================================
 //  EduRank — storage.js
-//  THE BRAIN — All data lives here
-//  Used by EVERY page
+//  BACKEND API INTEGRATION
+//  Uses Flask API + localStorage for session data
 // =============================================
 
-// Default students list (class data)
-const DEFAULT_STUDENTS = [
-  { name: "Aman",  elo: 1842, tier: "Gold",     accuracy: 94, streak: 12, speed: 8, activity: 90, quizzes: 15 },
-  { name: "Rohit", elo: 1720, tier: "Gold",     accuracy: 75, streak: 5,  speed: 6, activity: 70, quizzes: 12 },
-  { name: "Dev",   elo: 1650, tier: "Silver",   accuracy: 60, streak: 3,  speed: 5, activity: 55, quizzes: 10 },
-  { name: "Vansh", elo: 1500, tier: "Silver",   accuracy: 45, streak: 1,  speed: 4, activity: 40, quizzes: 7  },
-  { name: "Dhruv", elo: 1300, tier: "Bronze",   accuracy: 30, streak: 0,  speed: 3, activity: 20, quizzes: 4  },
-];
+const API_URL = "http://localhost:5000/api";
 
-// ── Initialize class data if not already in browser ──
-function initStorage() {
-  if (!localStorage.getItem("edurank_students")) {
-    localStorage.setItem("edurank_students", JSON.stringify(DEFAULT_STUDENTS));
+// ── Login or Create Student ──
+async function loginStudent(name) {
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name })
+    });
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      // Save current logged-in student to localStorage
+      localStorage.setItem("edurank_current", result.data.name);
+      return result.data;
+    } else {
+      console.error("Login failed:", result.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    return null;
   }
 }
 
-// ── Get all students ──
-function getAllStudents() {
-  initStorage();
-  return JSON.parse(localStorage.getItem("edurank_students"));
+// ── Get all students from backend ──
+async function getAllStudents() {
+  try {
+    const response = await fetch(`${API_URL}/students`);
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      console.error("Failed to get students:", result.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Get students error:", error);
+    return [];
+  }
 }
 
-// ── Get one student by name ──
-function getStudent(name) {
-  const students = getAllStudents();
-  return students.find(s => s.name.toLowerCase() === name.toLowerCase()) || null;
+// ── Get one student by name from backend ──
+async function getStudent(name) {
+  try {
+    const response = await fetch(`${API_URL}/students/${encodeURIComponent(name)}`);
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Get student error:", error);
+    return null;
+  }
 }
 
 // ── Save current logged in student name ──
@@ -37,48 +70,73 @@ function setCurrentStudent(name) {
   localStorage.setItem("edurank_current", name);
 }
 
-// ── Get current logged in student ──
-function getCurrentStudent() {
-  const name = localStorage.getItem("edurank_current");
-  if (!name) return null;
-  return getStudent(name);
+// ── Get current logged in student from localStorage ──
+function getCurrentStudentName() {
+  return localStorage.getItem("edurank_current");
 }
 
-// ── Update a student's data ──
-function updateStudent(name, newData) {
-  const students = getAllStudents();
-  const index = students.findIndex(s => s.name.toLowerCase() === name.toLowerCase());
-  if (index !== -1) {
-    students[index] = { ...students[index], ...newData };
-    localStorage.setItem("edurank_students", JSON.stringify(students));
+// ── Get current logged in student data ──
+async function getCurrentStudent() {
+  const name = localStorage.getItem("edurank_current");
+  if (!name) return null;
+  return await getStudent(name);
+}
+
+// ── Update a student's data on backend ──
+async function updateStudent(name, newData) {
+  try {
+    const response = await fetch(`${API_URL}/students/${encodeURIComponent(name)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newData)
+    });
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      console.error("Update failed:", result.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Update error:", error);
+    return null;
   }
 }
 
 // ── Add a brand new student ──
-function addStudent(name) {
-  const students = getAllStudents();
-  const exists = students.find(s => s.name.toLowerCase() === name.toLowerCase());
-  if (!exists) {
-    students.push({
-      name: name,
-      elo: 1000,
-      tier: "Bronze",
-      accuracy: 0,
-      streak: 0,
-      speed: 5,
-      activity: 0,
-      quizzes: 0
+async function addStudent(name) {
+  return await loginStudent(name);
+}
+
+// ── Update ELO after quiz/match ──
+async function updateELO(name, elo_change) {
+  try {
+    const response = await fetch(`${API_URL}/elo/update`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name, elo_change: elo_change })
     });
-    localStorage.setItem("edurank_students", JSON.stringify(students));
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      console.error("ELO update failed:", result.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("ELO update error:", error);
+    return null;
   }
 }
 
 // ── Get ELO tier label from number ──
 function getTier(elo) {
-  if (elo >= 2000) return "Diamond";
-  if (elo >= 1800) return "Gold";
-  if (elo >= 1500) return "Silver";
-  if (elo >= 1200) return "Bronze";
+  if (elo >= 1800) return "Diamond";
+  if (elo >= 1600) return "Platinum";
+  if (elo >= 1400) return "Gold";
+  if (elo >= 1200) return "Silver";
   return "Bronze";
 }
 
@@ -86,6 +144,7 @@ function getTier(elo) {
 function getTierColor(tier) {
   const colors = {
     "Diamond": "#a855f7",
+    "Platinum": "#06b6d4",
     "Gold":    "#81b64c",
     "Silver":  "#4a9fd4",
     "Bronze":  "#c4771b"
@@ -138,5 +197,119 @@ function getMatchHistory() {
   );
 }
 
-// Init on load
-initStorage();
+// ── TOURNAMENT FUNCTIONS ──
+
+// Get tournament data
+async function getTournament() {
+  try {
+    const response = await fetch(`${API_URL}/tournament`);
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Get tournament error:", error);
+    return null;
+  }
+}
+
+// Join tournament
+async function joinTournament(name) {
+  try {
+    const response = await fetch(`${API_URL}/tournament/join`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name })
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Join tournament error:", error);
+    return { status: "error", message: error.message };
+  }
+}
+
+// Start tournament
+async function startTournament() {
+  try {
+    const response = await fetch(`${API_URL}/tournament/start`, {
+      method: "POST"
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Start tournament error:", error);
+    return { status: "error", message: error.message };
+  }
+}
+
+// Submit match result
+async function submitMatchResult(player1, player2, result_type) {
+  try {
+    const response = await fetch(`${API_URL}/tournament/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        player1: player1,
+        player2: player2,
+        result: result_type
+      })
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Submit match error:", error);
+    return { status: "error", message: error.message };
+  }
+}
+
+// Get tournament standings
+async function getTournamentStandings() {
+  try {
+    const response = await fetch(`${API_URL}/tournament/standings`);
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error("Get standings error:", error);
+    return [];
+  }
+}
+
+// Reset tournament
+async function resetTournament() {
+  try {
+    const response = await fetch(`${API_URL}/tournament/reset`, {
+      method: "POST"
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Reset tournament error:", error);
+    return { status: "error", message: error.message };
+  }
+}
+
+// Get next pending match for a student
+async function getMyMatch(name) {
+  try {
+    const response = await fetch(`${API_URL}/tournament/mymatch?name=${encodeURIComponent(name)}`);
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      return result.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Get my match error:", error);
+    return null;
+  }
+}

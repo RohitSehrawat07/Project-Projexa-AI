@@ -35,8 +35,8 @@ function getDifficultyElo(difficulty) {
 // studentName = string
 // score       = 0 to 100 (percentage)
 // difficulty  = "easy" | "medium" | "hard"
-function updateELOAfterQuiz(studentName, score, difficulty) {
-  const student = getStudent(studentName);
+async function updateELOAfterQuiz(studentName, score, difficulty) {
+  const student = await getStudent(studentName);
   if (!student) return;
 
   const oppElo = getDifficultyElo(difficulty);
@@ -45,20 +45,20 @@ function updateELOAfterQuiz(studentName, score, difficulty) {
   const newElo = calculateELO(student.elo, oppElo, result);
   const newTier = getTier(newElo);
 
-  updateStudent(studentName, { elo: newElo, tier: newTier });
+  await updateStudent(studentName, { elo: newElo, tier: newTier });
 
   return { oldElo: student.elo, newElo, change: newElo - student.elo };
 }
 
 // ── ELO boost for daily challenge ──
-function dailyChallengeBonus(studentName, correct) {
-  const student = getStudent(studentName);
+async function dailyChallengeBonus(studentName, correct) {
+  const student = await getStudent(studentName);
   if (!student) return;
 
   const bonus = correct ? 15 : -5;
   const newElo = Math.max(student.elo + bonus, 100);
   const newTier = getTier(newElo);
 
-  updateStudent(studentName, { elo: newElo, tier: newTier });
+  await updateStudent(studentName, { elo: newElo, tier: newTier });
   return { oldElo: student.elo, newElo, change: bonus };
 }

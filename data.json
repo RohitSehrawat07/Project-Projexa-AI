@@ -1,0 +1,23 @@
+{
+  "students": [
+    {
+      "name": "Aman",
+      "elo": 1200,
+      "tier": "Bronze",
+      "accuracy": 0.0,
+      "streak": 0,
+      "speed": 0.0,
+      "activity": 0,
+      "quizzes": 0,
+      "badge": "None"
+    }
+  ],
+  "tournament": {
+    "status": "not_started",
+    "matches": [],
+    "results": [],
+    "players": [
+      "Aman"
+    ]
+  }
+}

@@ -14,24 +14,30 @@ function getTierRange(tier) {
 }
 
 // ── Main init ──
-window.onload = function() {
+window.onload = async function() {
   const name = localStorage.getItem('edurank_current');
   if (!name) { window.location.href = 'index.html'; return; }
 
-  const students = getAllStudents();
-  let student = students.find(s => s.name.toLowerCase() === name.toLowerCase());
-
-  // If new student not in list, create them
+  const student = await getStudent(name);
+  
   if (!student) {
-    student = {name, elo:1000, tier:"Bronze", accuracy:0, streak:0, speed:5, activity:0, quizzes:0};
-    students.push(student);
-    localStorage.setItem('edurank_students', JSON.stringify(students));
+    window.location.href = 'index.html';
+    return;
   }
 
+  const students = await getAllStudents();
   const tier = getTier(student.elo);
   const tierColor = getTierColor(tier);
   const [from, to] = getTierRange(tier);
-  const progress = Math.min(Math.max(Math.round(((student.elo - from) / (to - from)) * 100), 0), 100);
+  const tierEloMap = {
+    'Bronze': [1000, 1200],
+    'Silver': [1200, 1400],
+    'Gold': [1400, 1600],
+    'Platinum': [1600, 1800],
+    'Diamond': [1800, 2500]
+  };
+  const range = tierEloMap[tier] || [1000, 1200];
+  const progress = Math.min(Math.max(Math.round(((student.elo - range[0]) / (range[1] - range[0])) * 100), 0), 100);
   const sortedStudents = [...students].sort((a,b) => b.elo - a.elo);
   const rank = sortedStudents.findIndex(s => s.name.toLowerCase() === name.toLowerCase()) + 1;
 
@@ -47,9 +53,9 @@ window.onload = function() {
   document.getElementById('tierDisplay').textContent = '⬡ ' + tier;
   document.getElementById('tierDisplay').style.color = tierColor;
   document.getElementById('tierDisplay').style.borderColor = tierColor;
-  document.getElementById('eloChange').textContent = student.elo >= 1000 ? '▲ Active Player' : '— New Player';
-  document.getElementById('progFrom').textContent = tier + ' · ' + from;
-  document.getElementById('progTo').textContent = (tier === 'Diamond' ? 'Max' : getTier(to+1)) + ' · ' + to;
+  document.getElementById('eloChange').textContent = student.elo >= 1200 ? '▲ Active Player' : '— New Player';
+  document.getElementById('progFrom').textContent = tier + ' · ' + range[0];
+  document.getElementById('progTo').textContent = (tier === 'Diamond' ? 'Max' : getTier(range[1]+1)) + ' · ' + range[1];
   setTimeout(() => { document.getElementById('progFill').style.width = progress + '%'; }, 300);
 
   document.getElementById('statAccuracy').textContent = student.accuracy + '%';
