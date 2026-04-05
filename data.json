@@ -2,7 +2,7 @@
   "students": [
     {
       "name": "Aman",
-      "elo": 1200,
+      "elo": 1184,
       "tier": "Bronze",
       "accuracy": 0.0,
       "streak": 0,
@@ -13,14 +13,14 @@
     },
     {
       "name": "TestUser",
-      "elo": 1200,
-      "tier": "Bronze",
+      "elo": 1266,
+      "tier": "Silver",
       "accuracy": 0.0,
       "streak": 0,
       "speed": 0.0,
       "activity": 0,
       "quizzes": 0,
-      "badge": "None"
+      "badge": "Tournament Champion"
     },
     {
       "name": "John",
@@ -35,14 +35,14 @@
     }
   ],
   "tournament": {
-    "status": "running",
+    "status": "completed",
     "matches": [
       {
         "player1": "Aman",
         "player2": "TestUser",
-        "result": null,
+        "result": "TestUser",
         "points_p1": 0,
-        "points_p2": 0
+        "points_p2": 3
       }
     ],
     "results": [],
