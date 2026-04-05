@@ -22,10 +22,33 @@ async function loginStudent(name) {
       return result.data;
     } else {
       console.error("Login failed:", result.message);
-      return null;
+      return { _error: result.message };
     }
   } catch (error) {
     console.error("Login error:", error);
+    return null;
+  }
+}
+
+// ── Sign up new Student ──
+async function signupStudent(name) {
+  try {
+    const response = await fetch(`${API_URL}/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name })
+    });
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      localStorage.setItem("edurank_current", result.data.name);
+      return result.data;
+    } else {
+      console.error("Signup failed:", result.message);
+      return { _error: result.message };
+    }
+  } catch (error) {
+    console.error("Signup error:", error);
     return null;
   }
 }
@@ -106,7 +129,7 @@ async function updateStudent(name, newData) {
 
 // ── Add a brand new student ──
 async function addStudent(name) {
-  return await loginStudent(name);
+  return await signupStudent(name);
 }
 
 // ── Update ELO after quiz/match ──

@@ -37,7 +37,7 @@ async function loadTournamentData() {
     
     if (status === 'not_started') {
       renderJoinSection(tournament);
-    } else if (status === 'running') {
+    } else if (status === 'running' || status === 'completed') {
       renderRunningTournament(tournament);
     }
   } catch (error) {
@@ -98,9 +98,18 @@ async function renderRunningTournament(tournament) {
   document.getElementById('matchesSection').style.display = 'block';
   
   // Header
-  document.getElementById('headerStatus').textContent = 'Tournament in progress...';
-  document.getElementById('tournamentBadge').textContent = 'Active';
-  document.getElementById('tournamentBadge').className = 'status-badge active';
+  if (tournament.status === 'completed') {
+    document.getElementById('headerStatus').textContent = 'Tournament Finished!';
+    document.getElementById('tournamentBadge').textContent = 'Completed';
+    document.getElementById('tournamentBadge').className = 'status-badge';
+    document.getElementById('tournamentBadge').style.background = '#81b64c';
+    document.getElementById('tournamentBadge').style.color = '#1f2937';
+    document.getElementById('controlsMessage').textContent = 'Tournament concluded.';
+  } else {
+    document.getElementById('headerStatus').textContent = 'Tournament in progress...';
+    document.getElementById('tournamentBadge').textContent = 'Active';
+    document.getElementById('tournamentBadge').className = 'status-badge active';
+  }
   
   // Standings
   try {

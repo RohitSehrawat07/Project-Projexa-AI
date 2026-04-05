@@ -55,26 +55,47 @@ def login():
     student = get_student(name)
     
     if student:
-        # Student already exists
         return jsonify({
             "status": "success",
             "message": "Login successful",
             "data": student
         })
     else:
-        # Create new student
-        if add_student(name):
-            student = get_student(name)
-            return jsonify({
-                "status": "success",
-                "message": "Student created successfully",
-                "data": student
-            }), 201
-        else:
-            return jsonify({
-                "status": "error",
-                "message": "Failed to create student"
-            }), 500
+        return jsonify({
+            "status": "error",
+            "message": "Account not found. Please create an account."
+        }), 404
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    """Create a new student account"""
+    data = request.json
+    name = data.get("name", "").strip()
+    
+    if not name:
+        return jsonify({
+            "status": "error",
+            "message": "Name is required"
+        }), 400
+    
+    if student_exists(name):
+        return jsonify({
+            "status": "error",
+            "message": "Account already exists. Please login."
+        }), 400
+        
+    if add_student(name):
+        student = get_student(name)
+        return jsonify({
+            "status": "success",
+            "message": "Account created successfully",
+            "data": student
+        }), 201
+    else:
+        return jsonify({
+            "status": "error",
+            "message": "Failed to create account"
+        }), 500
 
 @app.route('/api/students/<name>', methods=['PUT'])
 def update_student_api(name):
@@ -289,6 +310,19 @@ def submit_match():
         }), 500
     
     tournament["matches"] = matches
+    
+    # Check if tournament is now complete
+    if check_tournament_complete(tournament):
+        tournament["status"] = "completed"
+        # Determine winner
+        players_names = tournament.get("players", [])
+        all_students = get_all_students()
+        players_data = [p for p in all_students if p["name"] in players_names]
+        standings_data = get_standings(players_data, matches)
+        if standings_data:
+            winner_name = standings_data[0]["name"]
+            award_champion(winner_name)
+    
     save_tournament(tournament)
     
     return jsonify({

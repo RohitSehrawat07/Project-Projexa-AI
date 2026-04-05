@@ -74,8 +74,8 @@ async function handleLogin() {
     // Call API
     const student = await loginStudent(displayName);
     
-    if (!student) {
-      errorEl.textContent = '❌ Failed to login. Please try again.';
+    if (!student || student._error) {
+      errorEl.textContent = `❌ ${student ? student._error : 'Failed to login. Please try again.'}`;
       btn.disabled = false;
       btnText.style.display = 'inline';
       spinner.style.display = 'none';
@@ -127,11 +127,11 @@ async function handleSignup() {
     // Capitalize name
     const displayName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     
-    // Call API (loginStudent auto-creates)
-    const student = await loginStudent(displayName);
+    // Call API
+    const student = await signupStudent(displayName);
     
-    if (!student) {
-      errorEl.textContent = '❌ Failed to create account. Please try again.';
+    if (!student || student._error) {
+      errorEl.textContent = `❌ ${student ? student._error : 'Failed to create account. Please try again.'}`;
       btn.disabled = false;
       btnText.style.display = 'inline';
       spinner.style.display = 'none';

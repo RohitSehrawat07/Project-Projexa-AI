@@ -86,10 +86,15 @@ def check_tournament_complete(tournament):
 
 def award_champion(name):
     """Award champion badge and bonus ELO"""
-    update_student(name, {
-        "badge": "Tournament Champion",
-        "elo": None  # Will be updated in app.py after ELO calculation
-    })
+    from database import get_student, get_tier
+    student = get_student(name)
+    if student:
+        new_elo = student["elo"] + 50
+        update_student(name, {
+            "badge": "Tournament Champion",
+            "elo": new_elo,
+            "tier": get_tier(new_elo)
+        })
 
 def submit_match_result(player1, player2, result_type):
     """

@@ -10,14 +10,45 @@
       "activity": 0,
       "quizzes": 0,
       "badge": "None"
+    },
+    {
+      "name": "TestUser",
+      "elo": 1200,
+      "tier": "Bronze",
+      "accuracy": 0.0,
+      "streak": 0,
+      "speed": 0.0,
+      "activity": 0,
+      "quizzes": 0,
+      "badge": "None"
+    },
+    {
+      "name": "John",
+      "elo": 1200,
+      "tier": "Bronze",
+      "accuracy": 0.0,
+      "streak": 0,
+      "speed": 0.0,
+      "activity": 0,
+      "quizzes": 0,
+      "badge": "None"
     }
   ],
   "tournament": {
-    "status": "not_started",
-    "matches": [],
+    "status": "running",
+    "matches": [
+      {
+        "player1": "Aman",
+        "player2": "TestUser",
+        "result": null,
+        "points_p1": 0,
+        "points_p2": 0
+      }
+    ],
     "results": [],
     "players": [
-      "Aman"
+      "Aman",
+      "TestUser"
     ]
   }
 }
