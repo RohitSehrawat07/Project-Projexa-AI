@@ -3,98 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match · EduRank Tournament</title>
+    <title>Tournament Run · EduRank</title>
     <link rel="stylesheet" href="css/tournament.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      .run-container { max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-family: 'Montserrat', sans-serif;}
+      .run-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f3f4f6; padding-bottom: 15px; margin-bottom: 20px; }
+      .run-title { font-size: 1.4rem; font-weight: 700; color: #111827; }
+      .timer { font-family: monospace; font-size: 2rem; font-weight: bold; color: #ef4444; }
+      .q-text { font-size: 1.25rem; margin-bottom: 24px; color: #1f2937; font-weight: 600; line-height: 1.4; }
+      .opt-btn { display: block; width: 100%; padding: 16px; font-size: 1.1rem; text-align: left; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Montserrat', sans-serif; }
+      .opt-btn:hover { background: #f3f4f6; border-color: #d1d5db; }
+      .opt-btn.selected { border-color: #f97316; background: #fff7ed; color: #9a3412; }
+      .btn-next { width: 100%; padding: 16px; border-radius: 12px; background: #f97316; color: white; border: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; opacity: 0.5; pointer-events: none; transition: 0.2s;}
+      .btn-next.enabled { opacity: 1; pointer-events: all; }
+      .btn-next.enabled:hover { background: #ea580c; }
+      .result-screen { text-align: center; display: none; }
+      .result-icon { font-size: 4rem; margin-bottom: 20px; }
+      .score-display { font-size: 2rem; font-weight: 800; color: #f97316; margin-bottom: 10px; }
+      .elo-gain { color: #10b981; font-weight: bold; font-size: 1.2rem; }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <!-- HEADER -->
-        <div class="tournament-header">
-            <div class="header-left">
-                <h1>⚔️ Tournament Match</h1>
-                <p id="headerStatus">Loading match...</p>
-            </div>
-            <div class="header-right">
-                <button class="btn btn-secondary" onclick="goBack()">← Back</button>
-            </div>
+<body style="background: #111827;">
+
+    <div class="run-container" id="gameScreen">
+        <div class="run-header">
+            <div class="run-title">⚔️ Tournament Run</div>
+            <div class="timer" id="timer">0:30</div>
         </div>
-
-        <!-- ERROR/SUCCESS MESSAGES -->
-        <div id="messageBox"></div>
-
-        <!-- MATCH INTERFACE -->
-        <div id="matchInterface" style="display:none">
-            <!-- PLAYER CARDS -->
-            <div class="match-layout">
-                <div class="match-player">
-                    <h2 id="player1Name">Player 1</h2>
-                    <div class="match-player-elo" id="player1Elo">ELO: 1200</div>
-                    <div id="player1Stats" style="text-align: left; margin-top: 16px; font-size: 13px; color: #6b7280;">
-                        <div>Accuracy: <span id="player1Acc">0%</span></div>
-                        <div>Tier: <span id="player1Tier">Bronze</span></div>
-                        <div>Quizzes: <span id="player1Quiz">0</span></div>
-                    </div>
-                </div>
-
-                <div class="vs-divider">
-                    <div class="vs-text">VS</div>
-                </div>
-
-                <div class="match-player">
-                    <h2 id="player2Name">Player 2</h2>
-                    <div class="match-player-elo" id="player2Elo">ELO: 1200</div>
-                    <div id="player2Stats" style="text-align: left; margin-top: 16px; font-size: 13px; color: #6b7280;">
-                        <div>Accuracy: <span id="player2Acc">0%</span></div>
-                        <div>Tier: <span id="player2Tier">Bronze</span></div>
-                        <div>Quizzes: <span id="player2Quiz">0</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MATCH CONTENT -->
-            <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                <!-- VIEW MODE (Read-only) -->
-                <div id="viewMode" style="display:none">
-                    <h3 style="margin-bottom: 16px; color: #1f2937;">Match Result</h3>
-                    <div id="resultDisplay" style="text-align: center; padding: 40px 20px;">
-                        <div style="font-size: 48px; margin-bottom: 16px;" id="resultIcon">⏳</div>
-                        <div id="resultText" style="font-size: 18px; color: #6b7280;">Match pending...</div>
-                    </div>
-                </div>
-
-                <!-- PLAY MODE (Interactive) -->
-                <div id="playMode" style="display:none">
-                    <h3 style="margin-bottom: 20px; color: #1f2937;">Submit Match Result</h3>
-                    <p style="color: #6b7280; margin-bottom: 16px;">
-                        As a participant or observer, who won this match?
-                    </p>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
-                        <button class="btn btn-primary" onclick="onSubmitMatch('player1_wins')" style="padding: 16px;">
-                            🏆 <span id="p1WinText">Player 1 Wins</span>
-                        </button>
-                        <button class="btn" onclick="onSubmitMatch('draw')" style="padding: 16px; background: #f59e0b; color: white;">
-                            🤝 Draw
-                        </button>
-                        <button class="btn btn-primary" onclick="onSubmitMatch('player2_wins')" style="padding: 16px;">
-                            🏆 <span id="p2WinText">Player 2 Wins</span>
-                        </button>
-                    </div>
-
-                    <div style="margin-top: 24px; padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; color: #92400e; border-radius: 4px;">
-                        <strong>⚠️ Note:</strong> In a real match, you would solve 10 coding questions. Here, you can manually submit the result for demo purposes.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- EMPTY STATE -->
-        <div id="emptyState" style="text-align: center; padding: 60px 20px;">
-            <p style="color: white; font-size: 18px; margin-bottom: 20px;">Loading match details...</p>
-        </div>
+        <div id="qCounter" style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Question 1 of 3</div>
+        <div class="q-text" id="qText">Loading question...</div>
+        <div id="optionsCont"></div>
+        <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Next Question</button>
     </div>
 
-    <!-- SCRIPTS -->
+    <div class="run-container result-screen" id="resultScreen">
+        <div class="result-icon">🏆</div>
+        <h2 style="color: #111827; margin-bottom: 10px;">Run Completed!</h2>
+        <div class="score-display">Score: <span id="finalScore">0</span>/3</div>
+        <p class="elo-gain" id="eloGain" style="margin-bottom: 30px;">+0 ELO Earned</p>
+        <button class="btn-next enabled" onclick="finishRun()">Return to Tournament</button>
+    </div>
+
     <script src="js/storage.js"></script>
     <script src="js/tournament_match.js"></script>
 </body>

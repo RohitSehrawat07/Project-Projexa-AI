@@ -222,140 +222,64 @@ def start_tournament():
         }), 400
     
     # Get player objects
-    all_students = get_all_students()
-    players = [p for p in all_students if p["name"] in players_names]
-    
-    # Generate matches
-    matches = generate_round_robin_matches(players)
-    
     tournament["status"] = "running"
-    tournament["matches"] = matches
-    tournament["results"] = []
-    tournament["players"] = players_names
+    if "scores" not in tournament:
+        tournament["scores"] = {}
+    
     save_tournament(tournament)
     
     return jsonify({
         "status": "success",
-        "message": "Tournament started",
-        "data": {
-            "total_matches": len(matches),
-            "players": players_names
-        }
+        "message": "Tournament started"
     })
 
-@app.route('/api/tournament/submit', methods=['POST'])
-def submit_match():
-    """Submit a match result"""
+@app.route('/api/tournament/play', methods=['POST'])
+def play_tournament():
+    """Submit a single player tournament run score"""
     data = request.json
-    player1 = data.get("player1", "").strip()
-    player2 = data.get("player2", "").strip()
-    result_type = data.get("result", "").strip()  # 'player1_wins', 'player2_wins', 'draw'
-    
-    if not all([player1, player2, result_type]):
-        return jsonify({
-            "status": "error",
-            "message": "player1, player2, and result are required"
-        }), 400
-    
-    if result_type not in ["player1_wins", "player2_wins", "draw"]:
-        return jsonify({
-            "status": "error",
-            "message": "result must be 'player1_wins', 'player2_wins', or 'draw'"
-        }), 400
+    name = data.get("name")
+    score = data.get("score", 0)
     
     tournament = get_tournament()
-    matches = tournament.get("matches", [])
+    if tournament.get("status") != "running":
+        return jsonify({"status": "error", "message": "Tournament not running"}), 400
+        
+    scores = tournament.get("scores", {})
+    scores[name] = scores.get(name, 0) + score
+    tournament["scores"] = scores
     
-    # Find the match
-    match = None
-    for m in matches:
-        if (m["player1"] == player1 and m["player2"] == player2) or \
-           (m["player1"] == player2 and m["player2"] == player1):
-            match = m
-            break
-    
-    if not match:
-        return jsonify({
-            "status": "error",
-            "message": f"Match between '{player1}' and '{player2}' not found"
-        }), 404
-    
-    if match["result"] is not None:
-        return jsonify({
-            "status": "error",
-            "message": "Match already completed"
-        }), 400
-    
-    # Calculate points
-    if result_type == "draw":
-        points_p1 = points_p2 = 1
-        result = "draw"
-    elif result_type == "player1_wins":
-        points_p1, points_p2 = 3, 0
-        result = player1 if player1 == match["player1"] else player2
-    else:  # player2_wins
-        points_p1, points_p2 = 0, 3
-        result = player2 if player2 == match["player2"] else player1
-    
-    # Update match
-    match["result"] = result
-    match["points_p1"] = points_p1
-    match["points_p2"] = points_p2
-    
-    # Update student ELO
-    if not submit_match_result(player1, player2, result_type):
-        return jsonify({
-            "status": "error",
-            "message": "Failed to update ELO"
-        }), 500
-    
-    tournament["matches"] = matches
-    
-    # Check if tournament is now complete
-    if check_tournament_complete(tournament):
-        tournament["status"] = "completed"
-        # Determine winner
-        players_names = tournament.get("players", [])
-        all_students = get_all_students()
-        players_data = [p for p in all_students if p["name"] in players_names]
-        standings_data = get_standings(players_data, matches)
-        if standings_data:
-            winner_name = standings_data[0]["name"]
-            award_champion(winner_name)
-    
+    student = get_student(name)
+    if student:
+        new_elo = student["elo"] + (score * 15)
+        update_student(name, {"elo": new_elo, "tier": get_tier(new_elo)})
+        
     save_tournament(tournament)
-    
-    return jsonify({
-        "status": "success",
-        "message": "Match result submitted",
-        "data": {
-            "player1": player1,
-            "player2": player2,
-            "result": result
-        }
-    })
+    return jsonify({"status": "success", "message": "Score submitted"})
 
 @app.route('/api/tournament/standings', methods=['GET'])
 def standings():
     """Get tournament standings"""
     tournament = get_tournament()
-    matches = tournament.get("matches", [])
+    scores = tournament.get("scores", {})
     players_names = tournament.get("players", [])
     
-    if not players_names:
-        return jsonify({
-            "status": "error",
-            "message": "No tournament in progress"
-        }), 400
-    
     all_students = get_all_students()
-    players = [p for p in all_students if p["name"] in players_names]
+    players_dict = {p["name"]: p for p in all_students}
     
-    standings_data = get_standings(players, matches)
+    standing_list = []
+    for p in players_names:
+        student = players_dict.get(p, {})
+        standing_list.append({
+            "name": p,
+            "points": scores.get(p, 0),
+            "elo": student.get("elo", 1200)
+        })
+        
+    standing_list.sort(key=lambda x: (-x["points"], -x["elo"]))
     
     return jsonify({
         "status": "success",
-        "data": standings_data
+        "data": standing_list
     })
 
 @app.route('/api/tournament/reset', methods=['POST'])

@@ -49,11 +49,16 @@
 
         <!-- TOURNAMENT CONTROLS (SHOWN WHEN RUNNING) -->
         <div id="controlsSection" class="tournament-controls" style="display:none">
-            <h2>⚙️ Tournament Control</h2>
-            <p id="controlsMessage" style="color: #6b7280; margin-bottom: 16px;">Tournament is in progress...</p>
-            <button class="btn btn-danger" onclick="onResetTournament()">
-                🔄 Reset Tournament
-            </button>
+            <h2>⚙️ Ongoing Tournament</h2>
+            <p id="controlsMessage" style="color: #6b7280; margin-bottom: 16px;">Play a tournament run to increase your points!</p>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-success" onclick="playRun()">
+                   🎮 Play Tournament Run
+                </button>
+                <button class="btn btn-danger" onclick="onResetTournament()">
+                    🔄 Reset Tournament
+                </button>
+            </div>
         </div>
 
         <!-- STANDINGS TABLE -->
@@ -68,11 +73,7 @@
             <div id="standingsTable"></div>
         </div>
 
-        <!-- MATCHES GRID -->
-        <div id="matchesSection" class="matches-section" style="display:none">
-            <h2>⚔️ Matches</h2>
-            <div id="matchesGrid"></div>
-        </div>
+
 
         <!-- EMPTY STATE -->
         <div id="emptyState" style="text-align: center; padding: 60px 20px;">

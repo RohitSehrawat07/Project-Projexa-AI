@@ -15,16 +15,34 @@
   <a href="index.html" class="logo">Edu<span>Rank</span></a>
   <a href="dashboard.html" class="back-btn">← Dashboard</a>
 </nav>
-<div class="stub">
-  <div class="stub-icon">⚡</div>
-  <div class="stub-title">Daily Challenge</div>
-  <div class="stub-sub">One question per day. Answer correctly to boost your ELO and maintain your streak. Milestones at 7, 30, 100 days.</div>
-  <div class="streak-preview">
+<div class="daily-container">
+  <div class="daily-header">
+    <div class="daily-title">⚡ Daily Coding Challenge</div>
+    <div class="timer" id="dailyTimer">01:00</div>
+  </div>
+  
+  <div class="streak-preview" style="margin-top: 0">
     <div class="streak-num" id="streakNum">0</div>
     <div class="streak-label">🔥 Your Current Streak</div>
   </div>
-  <div class="stub-owner">👨‍💻 Being built by Dhruv</div>
-  <a href="dashboard.html" class="btn">← Back to Dashboard</a>
+
+  <div id="quizArea" class="quiz-area">
+    <h3 id="questionText">What is the output of `console.log(typeof NaN)`?</h3>
+    <div class="options-grid" id="optionsGrid">
+      <button class="option-btn" onclick="selectOption(0, 'number')">A. 'number'</button>
+      <button class="option-btn" onclick="selectOption(1, 'NaN')">B. 'NaN'</button>
+      <button class="option-btn" onclick="selectOption(2, 'undefined')">C. 'undefined'</button>
+      <button class="option-btn" onclick="selectOption(3, 'string')">D. 'string'</button>
+    </div>
+    <button class="btn btn-submit" id="submitBtn" onclick="submitAnswer()" disabled>Submit Answer</button>
+  </div>
+  
+  <div id="resultArea" class="result-area" style="display:none">
+    <div class="result-icon" id="resultIcon">🏆</div>
+    <h2 id="resultTitle">Challenge Completed!</h2>
+    <p id="resultText">You earned +10 ELO and maintained your streak.</p>
+    <a href="dashboard.html" class="btn" style="margin-top:20px; display:inline-block;">Return to Dashboard</a>
+  </div>
 </div>
 </body>
 </html>

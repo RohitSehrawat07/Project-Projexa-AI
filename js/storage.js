@@ -269,70 +269,21 @@ async function startTournament() {
   }
 }
 
-// Submit match result
-async function submitMatchResult(player1, player2, result_type) {
+// Submit tournament run score
+async function playTournament(name, score) {
   try {
-    const response = await fetch(`${API_URL}/tournament/submit`, {
+    const response = await fetch(`${API_URL}/tournament/play`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        player1: player1,
-        player2: player2,
-        result: result_type
+        name: name,
+        score: score
       })
     });
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error("Submit match error:", error);
+    console.error("Play tournament error:", error);
     return { status: "error", message: error.message };
-  }
-}
-
-// Get tournament standings
-async function getTournamentStandings() {
-  try {
-    const response = await fetch(`${API_URL}/tournament/standings`);
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    console.error("Get standings error:", error);
-    return [];
-  }
-}
-
-// Reset tournament
-async function resetTournament() {
-  try {
-    const response = await fetch(`${API_URL}/tournament/reset`, {
-      method: "POST"
-    });
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error("Reset tournament error:", error);
-    return { status: "error", message: error.message };
-  }
-}
-
-// Get next pending match for a student
-async function getMyMatch(name) {
-  try {
-    const response = await fetch(`${API_URL}/tournament/mymatch?name=${encodeURIComponent(name)}`);
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Get my match error:", error);
-    return null;
   }
 }

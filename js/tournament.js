@@ -95,7 +95,6 @@ async function renderRunningTournament(tournament) {
   document.getElementById('joinSection').style.display = 'none';
   document.getElementById('controlsSection').style.display = 'block';
   document.getElementById('standingsSection').style.display = 'block';
-  document.getElementById('matchesSection').style.display = 'block';
   
   // Header
   if (tournament.status === 'completed') {
@@ -118,10 +117,6 @@ async function renderRunningTournament(tournament) {
   } catch (error) {
     console.error('Failed to load standings:', error);
   }
-  
-  // Matches
-  const matches = tournament.matches || [];
-  await renderMatches(matches);
 }
 
 // ── Render Standings Table ──
@@ -150,63 +145,12 @@ async function renderStandings(standings) {
   }).join('');
 }
 
-// ── Render Matches Grid ──
-async function renderMatches(matches) {
-  const grid = document.getElementById('matchesGrid');
-  
-  if (!matches || matches.length === 0) {
-    grid.innerHTML = '<div style="padding: 20px; text-align: center; color: #6b7280; grid-column: 1/-1;">No matches yet.</div>';
-    return;
-  }
-  
-  grid.innerHTML = matches.map((m, i) => {
-    const isCompleted = m.result !== null;
-    const isMyMatch = m.player1 === currentName || m.player2 === currentName;
-    
-    return `
-      <div class="match-card ${isCompleted ? 'completed' : 'pending'}">
-        <div class="match-players">
-          <div class="player-info">
-            <div class="player-info-name ${m.player1 === currentName ? 'self' : ''}">${m.player1}</div>
-            <div class="player-info-elo">ELO</div>
-          </div>
-          <div class="match-vs">VS</div>
-          <div class="player-info">
-            <div class="player-info-name ${m.player2 === currentName ? 'self' : ''}">${m.player2}</div>
-            <div class="player-info-elo">ELO</div>
-          </div>
-        </div>
-        
-        <div class="match-result">
-          <p>Result</p>
-          ${isCompleted ? `
-            <div class="result-status ${m.result === 'draw' ? 'draw' : 'completed'}">
-              ${m.result === 'draw' ? '🤝 Draw' : `✅ ${m.result} Won`}
-            </div>
-          ` : `
-            <div class="result-status">⏳ Pending</div>
-          `}
-        </div>
-        
-        <div class="match-actions">
-          ${isMyMatch && !isCompleted ? `
-            <button class="btn-play" onclick="goToMatch('${m.player1}', '${m.player2}')">🎮 Play</button>
-          ` : `
-            <button class="btn-view" onclick="viewMatch('${m.player1}', '${m.player2}')">👁️ View</button>
-          `}
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
 // ── Show Empty State ──
 function showEmptyState() {
   document.getElementById('emptyState').style.display = 'block';
   document.getElementById('joinSection').style.display = 'none';
   document.getElementById('controlsSection').style.display = 'none';
   document.getElementById('standingsSection').style.display = 'none';
-  document.getElementById('matchesSection').style.display = 'none';
 }
 
 // ── Show Error Message ──
@@ -286,18 +230,9 @@ async function onResetTournament() {
   }
 }
 
-// ── Navigate to Match ──
-function goToMatch(player1, player2) {
-  localStorage.setItem('tournament_match_p1', player1);
-  localStorage.setItem('tournament_match_p2', player2);
+// ── Play Tournament Run ──
+function playRun() {
   window.location.href = 'tournament_match.html';
-}
-
-// ── View Match Details ──
-function viewMatch(player1, player2) {
-  localStorage.setItem('tournament_match_p1', player1);
-  localStorage.setItem('tournament_match_p2', player2);
-  window.location.href = 'tournament_match.html?view=true';
 }
 
 // ── Go Back ──
