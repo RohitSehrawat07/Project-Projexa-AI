@@ -52,7 +52,6 @@ function renderJoinSection(tournament) {
   document.getElementById('joinSection').style.display = 'block';
   document.getElementById('controlsSection').style.display = 'none';
   document.getElementById('standingsSection').style.display = 'none';
-  document.getElementById('matchesSection').style.display = 'none';
   
   const players = tournament.players || [];
   const hasJoined = players.includes(currentName);
@@ -112,7 +111,9 @@ async function renderRunningTournament(tournament) {
   
   // Standings
   try {
-    const standings = await getTournamentStandings();
+    const resp = await fetch(`${API_URL}/tournament/standings`);
+    const result = await resp.json();
+    const standings = result.status === 'success' ? result.data : [];
     await renderStandings(standings);
   } catch (error) {
     console.error('Failed to load standings:', error);
@@ -198,7 +199,7 @@ async function onStartTournament() {
     const result = await startTournament();
     
     if (result.status === 'success') {
-      showSuccess('Tournament started! ' + result.data.total_matches + ' matches generated.');
+      showSuccess('Tournament started!');
       await loadTournamentData();
     } else {
       showError(result.message || 'Failed to start tournament');

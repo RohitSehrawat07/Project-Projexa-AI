@@ -32,23 +32,23 @@
       "activity": 0,
       "quizzes": 0,
       "badge": "None"
+    },
+    {
+      "name": "TestPlayer",
+      "elo": 1230,
+      "tier": "Silver",
+      "accuracy": 0.0,
+      "streak": 0,
+      "speed": 0.0,
+      "activity": 0,
+      "quizzes": 0,
+      "badge": "None"
     }
   ],
   "tournament": {
-    "status": "completed",
-    "matches": [
-      {
-        "player1": "Aman",
-        "player2": "TestUser",
-        "result": "TestUser",
-        "points_p1": 0,
-        "points_p2": 3
-      }
-    ],
-    "results": [],
-    "players": [
-      "Aman",
-      "TestUser"
-    ]
+    "status": "not_started",
+    "players": [],
+    "matches": [],
+    "results": []
   }
 }

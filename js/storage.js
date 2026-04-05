@@ -287,3 +287,17 @@ async function playTournament(name, score) {
     return { status: "error", message: error.message };
   }
 }
+
+// Reset tournament
+async function resetTournament() {
+  try {
+    const response = await fetch(`${API_URL}/tournament/reset`, {
+      method: "POST"
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Reset tournament error:", error);
+    return { status: "error", message: error.message };
+  }
+}

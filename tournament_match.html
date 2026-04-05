@@ -4,34 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Run · EduRank</title>
-    <link rel="stylesheet" href="css/tournament.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
-      .run-container { max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-family: 'Montserrat', sans-serif;}
-      .run-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f3f4f6; padding-bottom: 15px; margin-bottom: 20px; }
-      .run-title { font-size: 1.4rem; font-weight: 700; color: #111827; }
-      .timer { font-family: monospace; font-size: 2rem; font-weight: bold; color: #ef4444; }
-      .q-text { font-size: 1.25rem; margin-bottom: 24px; color: #1f2937; font-weight: 600; line-height: 1.4; }
-      .opt-btn { display: block; width: 100%; padding: 16px; font-size: 1.1rem; text-align: left; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Montserrat', sans-serif; }
-      .opt-btn:hover { background: #f3f4f6; border-color: #d1d5db; }
-      .opt-btn.selected { border-color: #f97316; background: #fff7ed; color: #9a3412; }
-      .btn-next { width: 100%; padding: 16px; border-radius: 12px; background: #f97316; color: white; border: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; opacity: 0.5; pointer-events: none; transition: 0.2s;}
+      body { background: var(--bg); }
+      .run-container {
+        max-width: 600px; margin: 3rem auto; background: var(--surface);
+        border: 1px solid var(--border); border-radius: 10px; padding: 2rem;
+        font-family: 'Montserrat', sans-serif;
+      }
+      .run-header {
+        display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;
+      }
+      .run-title { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+      .timer {
+        font-family: 'Source Code Pro', monospace; font-size: 1.8rem;
+        font-weight: bold; color: var(--green);
+      }
+      #qCounter {
+        color: var(--muted); font-weight: 600; margin-bottom: 0.6rem;
+        font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;
+        font-family: 'Source Code Pro', monospace;
+      }
+      .q-text {
+        font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text);
+        font-weight: 600; line-height: 1.5;
+      }
+      .opt-btn {
+        display: block; width: 100%; padding: 1rem 1.2rem; font-size: 0.95rem;
+        text-align: left; background: var(--bg2); border: 1px solid var(--border);
+        border-radius: 8px; margin-bottom: 0.6rem; cursor: pointer;
+        transition: all 0.15s; font-family: 'Montserrat', sans-serif;
+        color: var(--text);
+      }
+      .opt-btn:hover { border-color: var(--green); background: var(--surface2); }
+      .opt-btn.selected {
+        border-color: var(--green); background: rgba(129,182,76,0.1);
+        color: var(--green); font-weight: 600;
+      }
+      .btn-next {
+        width: 100%; padding: 0.9rem; border-radius: 6px;
+        background: var(--green); color: #fff; border: none;
+        font-size: 0.95rem; font-weight: 700; cursor: pointer;
+        margin-top: 0.8rem; opacity: 0.3; pointer-events: none;
+        transition: all 0.15s; font-family: 'Montserrat', sans-serif;
+      }
       .btn-next.enabled { opacity: 1; pointer-events: all; }
-      .btn-next.enabled:hover { background: #ea580c; }
+      .btn-next.enabled:hover { background: var(--green2); }
       .result-screen { text-align: center; display: none; }
-      .result-icon { font-size: 4rem; margin-bottom: 20px; }
-      .score-display { font-size: 2rem; font-weight: 800; color: #f97316; margin-bottom: 10px; }
-      .elo-gain { color: #10b981; font-weight: bold; font-size: 1.2rem; }
+      .result-icon { font-size: 4rem; margin-bottom: 1rem; }
+      .score-display {
+        font-size: 2rem; font-weight: 800; color: var(--green);
+        margin-bottom: 0.5rem; font-family: 'Source Code Pro', monospace;
+      }
+      .elo-gain {
+        color: var(--gold); font-weight: 700; font-size: 1.1rem;
+        font-family: 'Source Code Pro', monospace;
+      }
     </style>
 </head>
-<body style="background: #111827;">
+<body>
 
     <div class="run-container" id="gameScreen">
         <div class="run-header">
             <div class="run-title">⚔️ Tournament Run</div>
             <div class="timer" id="timer">0:30</div>
         </div>
-        <div id="qCounter" style="color: #6b7280; font-weight: 600; margin-bottom: 10px;">Question 1 of 3</div>
+        <div id="qCounter">Question 1 of 3</div>
         <div class="q-text" id="qText">Loading question...</div>
         <div id="optionsCont"></div>
         <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Next Question</button>
@@ -39,9 +79,9 @@
 
     <div class="run-container result-screen" id="resultScreen">
         <div class="result-icon">🏆</div>
-        <h2 style="color: #111827; margin-bottom: 10px;">Run Completed!</h2>
+        <h2 style="color: var(--text); margin-bottom: 0.5rem;">Run Completed!</h2>
         <div class="score-display">Score: <span id="finalScore">0</span>/3</div>
-        <p class="elo-gain" id="eloGain" style="margin-bottom: 30px;">+0 ELO Earned</p>
+        <p class="elo-gain" id="eloGain" style="margin-bottom: 2rem;">+0 ELO Earned</p>
         <button class="btn-next enabled" onclick="finishRun()">Return to Tournament</button>
     </div>
 
