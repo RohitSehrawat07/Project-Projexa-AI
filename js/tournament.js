@@ -1,6 +1,7 @@
 // =============================================
 //  EduRank — tournament.js
 //  Tournament Logic for tournament.html
+//  Supports: Competitive (round-robin) + Practice Mode
 // =============================================
 
 let currentName = null;
@@ -18,8 +19,8 @@ window.onload = async function() {
   currentName = name;
   await loadTournamentData();
   
-  // Refresh tournament data every 2 seconds
-  refreshInterval = setInterval(loadTournamentData, 2000);
+  // Refresh tournament data every 3 seconds
+  refreshInterval = setInterval(loadTournamentData, 3000);
 };
 
 // ── Load and render tournament data ──
@@ -109,11 +110,9 @@ async function renderRunningTournament(tournament) {
     document.getElementById('tournamentBadge').className = 'status-badge active';
   }
   
-  // Standings
+  // Standings — backend returns array directly
   try {
-    const resp = await fetch(`${API_URL}/tournament/standings`);
-    const result = await resp.json();
-    const standings = result.status === 'success' ? result.data : [];
+    const standings = await getTournamentStandings();
     await renderStandings(standings);
   } catch (error) {
     console.error('Failed to load standings:', error);
@@ -177,11 +176,12 @@ async function onJoinTournament() {
   try {
     const result = await joinTournament(currentName);
     
-    if (result.status === 'success') {
-      showSuccess(result.message);
-      await loadTournamentData();
+    // Backend returns tournament object directly, or error
+    if (result.error) {
+      showError(result.error);
     } else {
-      showError(result.message || 'Failed to join tournament');
+      showSuccess('Successfully joined the tournament!');
+      await loadTournamentData();
     }
   } catch (error) {
     console.error('Join error:', error);
@@ -198,11 +198,11 @@ async function onStartTournament() {
   try {
     const result = await startTournament();
     
-    if (result.status === 'success') {
+    if (result.error) {
+      showError(result.error);
+    } else {
       showSuccess('Tournament started!');
       await loadTournamentData();
-    } else {
-      showError(result.message || 'Failed to start tournament');
     }
   } catch (error) {
     console.error('Start error:', error);
@@ -219,11 +219,11 @@ async function onResetTournament() {
   try {
     const result = await resetTournament();
     
-    if (result.status === 'success') {
+    if (result.error) {
+      showError('Failed to reset tournament');
+    } else {
       showSuccess('Tournament reset!');
       await loadTournamentData();
-    } else {
-      showError('Failed to reset tournament');
     }
   } catch (error) {
     console.error('Reset error:', error);
@@ -231,9 +231,14 @@ async function onResetTournament() {
   }
 }
 
-// ── Play Tournament Run ──
+// ── Play Tournament Run (Competitive) ──
 function playRun() {
-  window.location.href = 'tournament_match.html';
+  window.location.href = 'tournament_match.html?mode=competitive';
+}
+
+// ── Play Practice Mode ──
+function playPractice() {
+  window.location.href = 'tournament_match.html?mode=practice';
 }
 
 // ── Go Back ──

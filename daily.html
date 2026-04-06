@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/daily.css">
 <script src="js/storage.js"></script>
-<script src="js/daily.js"></script>
 </head>
 <body>
 <nav class="topnav">
@@ -20,29 +19,74 @@
     <div class="daily-title">⚡ Daily Coding Challenge</div>
     <div class="timer" id="dailyTimer">01:00</div>
   </div>
+
+  <!-- TABS -->
+  <div class="daily-tabs">
+    <button class="daily-tab active" id="tabToday" onclick="switchDailyTab('today')">📋 Today's Challenge</button>
+    <button class="daily-tab" id="tabOld" onclick="switchDailyTab('old')">📜 Past Questions</button>
+  </div>
   
   <div class="streak-preview" style="margin-top: 0">
     <div class="streak-num" id="streakNum">0</div>
     <div class="streak-label">🔥 Your Current Streak</div>
   </div>
 
-  <div id="quizArea" class="quiz-area">
-    <h3 id="questionText">What is the output of `console.log(typeof NaN)`?</h3>
-    <div class="options-grid" id="optionsGrid">
-      <button class="option-btn" onclick="selectOption(0, 'number')">A. 'number'</button>
-      <button class="option-btn" onclick="selectOption(1, 'NaN')">B. 'NaN'</button>
-      <button class="option-btn" onclick="selectOption(2, 'undefined')">C. 'undefined'</button>
-      <button class="option-btn" onclick="selectOption(3, 'string')">D. 'string'</button>
+  <!-- TODAY TAB -->
+  <div id="todayTab">
+    <!-- Already completed message -->
+    <div id="alreadyDone" class="already-done" style="display:none">
+      <div class="already-icon" id="alreadyIcon">✅</div>
+      <h2 id="alreadyTitle">Already Completed Today!</h2>
+      <p id="alreadyText">You've already answered today's challenge. Come back tomorrow!</p>
+      <div id="alreadyElo" class="already-elo"></div>
     </div>
-    <button class="btn btn-submit" id="submitBtn" onclick="submitAnswer()" disabled>Submit Answer</button>
+
+    <!-- Quiz area (dynamically populated) -->
+    <div id="quizArea" class="quiz-area" style="display:none">
+      <div class="difficulty-badge" id="diffBadge">Medium</div>
+      <h3 id="questionText">Loading question...</h3>
+      <div class="options-grid" id="optionsGrid"></div>
+      <button class="btn btn-submit" id="submitBtn" onclick="submitAnswer()" disabled>Submit Answer</button>
+    </div>
+    
+    <!-- Result area -->
+    <div id="resultArea" class="result-area" style="display:none">
+      <div class="result-icon" id="resultIcon">🏆</div>
+      <h2 id="resultTitle">Challenge Completed!</h2>
+      <p id="resultText">You earned +15 ELO and maintained your streak.</p>
+      <div class="result-elo" id="resultElo"></div>
+      <a href="dashboard.html" class="btn" style="margin-top:20px; display:inline-block;">Return to Dashboard</a>
+    </div>
   </div>
-  
-  <div id="resultArea" class="result-area" style="display:none">
-    <div class="result-icon" id="resultIcon">🏆</div>
-    <h2 id="resultTitle">Challenge Completed!</h2>
-    <p id="resultText">You earned +10 ELO and maintained your streak.</p>
-    <a href="dashboard.html" class="btn" style="margin-top:20px; display:inline-block;">Return to Dashboard</a>
+
+  <!-- OLD QUESTIONS TAB -->
+  <div id="oldTab" style="display:none">
+    <div class="old-info">
+      <p>💡 Answer past questions you missed for <strong>+5 ELO</strong> (reduced reward). These do NOT affect your streak.</p>
+    </div>
+    <div id="oldQuestionsGrid" class="old-questions-grid">
+      <div style="text-align:center; color:#9ca3af; padding:40px;">Loading past questions...</div>
+    </div>
+
+    <!-- Old question quiz area -->
+    <div id="oldQuizArea" class="quiz-area" style="display:none">
+      <div class="old-date-badge" id="oldDateBadge">Past Question</div>
+      <h3 id="oldQuestionText">Loading...</h3>
+      <div class="options-grid" id="oldOptionsGrid"></div>
+      <button class="btn btn-submit" id="oldSubmitBtn" onclick="submitOldAnswer()" disabled>Submit Answer</button>
+      <button class="btn btn-secondary" onclick="cancelOldQuestion()" style="margin-top:10px;">← Back to List</button>
+    </div>
+
+    <!-- Old question result -->
+    <div id="oldResultArea" class="result-area" style="display:none">
+      <div class="result-icon" id="oldResultIcon">🏆</div>
+      <h2 id="oldResultTitle">Answer Submitted!</h2>
+      <p id="oldResultText"></p>
+      <button class="btn" onclick="cancelOldQuestion()" style="margin-top:20px;">Try Another Past Question</button>
+    </div>
   </div>
 </div>
+
+<script src="js/daily.js"></script>
 </body>
 </html>

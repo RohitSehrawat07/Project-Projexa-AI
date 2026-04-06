@@ -69,9 +69,9 @@
     <div class="run-container" id="gameScreen">
         <div class="run-header">
             <div class="run-title">⚔️ Tournament Run</div>
-            <div class="timer" id="timer">0:30</div>
+            <div class="timer" id="timer">0:45</div>
         </div>
-        <div id="qCounter">Question 1 of 3</div>
+        <div id="qCounter">Question 1 of 5</div>
         <div class="q-text" id="qText">Loading question...</div>
         <div id="optionsCont"></div>
         <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Next Question</button>
@@ -80,7 +80,7 @@
     <div class="run-container result-screen" id="resultScreen">
         <div class="result-icon">🏆</div>
         <h2 style="color: var(--text); margin-bottom: 0.5rem;">Run Completed!</h2>
-        <div class="score-display">Score: <span id="finalScore">0</span>/3</div>
+        <div class="score-display">Score: <span id="finalScore">0</span>/5</div>
         <p class="elo-gain" id="eloGain" style="margin-bottom: 2rem;">+0 ELO Earned</p>
         <button class="btn-next enabled" onclick="finishRun()">Return to Tournament</button>
     </div>

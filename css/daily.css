@@ -197,3 +197,177 @@ body {
 }
 
 .btn:hover { background: var(--green2, #6ea03e); }
+
+.btn-secondary {
+  background: var(--surface, #312e2b);
+  color: var(--muted, #999693);
+  border: 1px solid var(--border, #3d3a37);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.btn-secondary:hover { border-color: var(--green, #81b64c); color: var(--text, #e8e6e3); }
+
+/* ── TABS ── */
+.daily-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1rem;
+  background: var(--surface, #312e2b);
+  border: 1px solid var(--border, #3d3a37);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.daily-tab {
+  flex: 1;
+  padding: 0.7rem 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted, #999693);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.daily-tab:hover { color: var(--text, #e8e6e3); }
+
+.daily-tab.active {
+  background: var(--green, #81b64c);
+  color: #fff;
+}
+
+/* ── DIFFICULTY BADGE ── */
+.difficulty-badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  background: rgba(129, 182, 76, 0.15);
+  color: var(--green, #81b64c);
+  border: 1px solid rgba(129, 182, 76, 0.3);
+}
+
+.difficulty-badge.easy { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+.difficulty-badge.hard { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+
+/* ── ALREADY DONE ── */
+.already-done {
+  background: var(--surface, #312e2b);
+  border: 1px solid var(--border, #3d3a37);
+  border-radius: 10px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.already-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.already-done h2 { font-size: 1.3rem; margin-bottom: 0.5rem; color: #10b981; }
+.already-done p { color: var(--muted, #999693); font-size: 0.9rem; margin-bottom: 0.5rem; }
+.already-elo { 
+  font-family: 'Source Code Pro', monospace; 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  margin-top: 0.8rem; 
+}
+
+/* ── RESULT ELO ── */
+.result-elo { 
+  font-family: 'Source Code Pro', monospace; 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  margin-top: 0.5rem; 
+}
+
+/* ── OLD QUESTIONS ── */
+.old-info {
+  background: rgba(129, 182, 76, 0.08);
+  border: 1px solid rgba(129, 182, 76, 0.2);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: var(--muted, #999693);
+}
+
+.old-info strong { color: var(--green, #81b64c); }
+
+.old-questions-grid {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.old-question-card {
+  background: var(--surface, #312e2b);
+  border: 1px solid var(--border, #3d3a37);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.old-question-card:hover {
+  border-color: var(--green, #81b64c);
+  transform: translateY(-1px);
+}
+
+.old-q-date {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted, #999693);
+  margin-bottom: 0.5rem;
+}
+
+.old-q-badge {
+  background: rgba(129, 182, 76, 0.15);
+  color: var(--green, #81b64c);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  margin-left: 0.5rem;
+}
+
+.old-q-text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text, #e8e6e3);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.old-q-reward {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.72rem;
+  color: var(--green, #81b64c);
+  font-weight: 600;
+}
+
+.old-date-badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  background: rgba(74, 159, 212, 0.15);
+  color: #4a9fd4;
+  border: 1px solid rgba(74, 159, 212, 0.3);
+}

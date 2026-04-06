@@ -22,6 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if (loginInput) {
     loginInput.focus();
   }
+
+  // Nav scroll effect
+  const nav = document.querySelector('nav');
+  if (nav) {
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+  }
 });
 
 // ── Handle login (unified — creates account if new) ──
@@ -53,8 +61,8 @@ async function handleLogin() {
   errorEl.textContent = '';
 
   try {
-    // Capitalize name
-    const displayName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    // Title-case name (each word capitalized)
+    const displayName = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 
     // Call unified login API
     const student = await loginStudent(displayName);
@@ -109,8 +117,8 @@ async function handleSignup() {
   errorEl.textContent = '';
 
   try {
-    // Capitalize name
-    const displayName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    // Title-case name (each word capitalized)
+    const displayName = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 
     // Call the SAME unified login API (creates if new)
     const student = await loginStudent(displayName);

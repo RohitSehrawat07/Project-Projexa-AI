@@ -25,6 +25,23 @@
         <!-- ERROR/SUCCESS MESSAGES -->
         <div id="messageBox"></div>
 
+        <!-- MODE SELECTOR -->
+        <div class="mode-selector">
+            <div class="mode-card competitive" onclick="document.getElementById('competitiveSection').scrollIntoView({behavior:'smooth'})">
+                <div class="mode-icon">⚔️</div>
+                <div class="mode-title">Competitive Mode</div>
+                <div class="mode-desc">Round-robin tournament against other players. ELO updated after each match.</div>
+            </div>
+            <div class="mode-card practice" onclick="playPractice()">
+                <div class="mode-icon">📝</div>
+                <div class="mode-title">Practice Mode</div>
+                <div class="mode-desc">Solo quiz run. No opponent needed. Answer questions to earn ELO points.</div>
+            </div>
+        </div>
+
+        <!-- COMPETITIVE SECTION -->
+        <div id="competitiveSection">
+
         <!-- JOIN TOURNAMENT SECTION (HIDDEN WHEN RUNNING) -->
         <div id="joinSection" class="tournament-join" style="display:none">
             <div class="join-content">
@@ -75,7 +92,7 @@
             <div id="standingsTable"></div>
         </div>
 
-
+        </div><!-- end competitiveSection -->
 
         <!-- EMPTY STATE -->
         <div id="emptyState" style="text-align: center; padding: 60px 20px;">

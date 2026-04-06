@@ -130,6 +130,69 @@ async function submitQuiz(payload) {
   }
 }
 
+// ── Get today's daily question ──
+async function getDailyQuestion(name, date) {
+  try {
+    let url = `${API}/daily/question?name=${encodeURIComponent(name)}`;
+    if (date) url += `&date=${encodeURIComponent(date)}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
+  } catch (error) {
+    console.error("Get daily question error:", error);
+    return null;
+  }
+}
+
+// ── Get old (past) daily questions ──
+async function getOldQuestions(name) {
+  try {
+    const res = await fetch(`${API}/daily/old?name=${encodeURIComponent(name)}`);
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (error) {
+    console.error("Get old questions error:", error);
+    return [];
+  }
+}
+
+// ── Submit daily challenge answer ──
+async function submitDaily(payload) {
+  try {
+    const res = await fetch(`${API}/daily/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const errData = await res.json();
+      return { _error: errData.error || "Submission failed", ...errData };
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Daily submit error:", error);
+    return { _error: "Cannot connect to server" };
+  }
+}
+
+// ── Submit tournament practice result ──
+async function submitTournamentPractice(payload) {
+  try {
+    const res = await fetch(`${API}/tournament/practice`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
+  } catch (error) {
+    console.error("Tournament practice error:", error);
+    return null;
+  }
+}
+
 // ── Get ELO tier label from number ──
 function getTier(elo) {
   if (elo >= 1800) return "Diamond";

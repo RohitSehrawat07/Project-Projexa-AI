@@ -41,14 +41,16 @@ def add_student(name):
     db = load_db()
     new_student = {
         "name": name,
-        "elo": 1200,
+        "elo": 1000,
         "tier": "Bronze",
         "accuracy": 0.0,
         "streak": 0,
         "speed": 0.0,
         "activity": 0,
         "quizzes": 0,
-        "badge": "None"
+        "badge": "None",
+        "last_active_date": None,
+        "daily_completions": {}
     }
     db["students"].append(new_student)
     save_db(db)
@@ -62,7 +64,7 @@ def update_student(name, data):
     for i, student in enumerate(students):
         if student["name"].lower() == name.lower():
             # Update allowed fields
-            allowed_fields = ["elo", "tier", "accuracy", "streak", "speed", "activity", "quizzes", "badge"]
+            allowed_fields = ["elo", "tier", "accuracy", "streak", "speed", "activity", "quizzes", "badge", "last_active_date", "daily_completions"]
             for field in allowed_fields:
                 if field in data:
                     student[field] = data[field]

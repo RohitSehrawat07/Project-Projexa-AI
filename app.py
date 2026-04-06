@@ -70,17 +70,6 @@ def login():
         return jsonify(student)
     
     if add_student(name):
-        initial_data = {
-            "elo": 1000,
-            "accuracy": 0,
-            "streak": 0,
-            "quizzes": 0,
-            "speed": 1,
-            "activity": 0,
-            "tier": get_tier(1000),
-            "last_active_date": None
-        }
-        update_student(name, initial_data)
         return jsonify(get_student(name)), 201
         
     return jsonify({"error": "Failed to create account"}), 500
@@ -205,6 +194,192 @@ def submit_quiz():
     })
     
     return jsonify(get_student(name))
+
+# ============================================================
+# QUESTION BANK
+# ============================================================
+
+QUESTION_BANK = [
+    {"id": 0, "question": "What is the output of `console.log(typeof NaN)`?", "options": ["'number'", "'NaN'", "'undefined'", "'string'"], "correct": 0, "difficulty": "medium"},
+    {"id": 1, "question": "Which data structure uses LIFO (Last In First Out)?", "options": ["Queue", "Stack", "Tree", "Graph"], "correct": 1, "difficulty": "easy"},
+    {"id": 2, "question": "What is the time complexity of binary search?", "options": ["O(n)", "O(n log n)", "O(log n)", "O(1)"], "correct": 2, "difficulty": "easy"},
+    {"id": 3, "question": "Which sorting algorithm is generally fastest in practice?", "options": ["Bubble Sort", "Insertion Sort", "Selection Sort", "Quick Sort"], "correct": 3, "difficulty": "medium"},
+    {"id": 4, "question": "What does SQL stand for?", "options": ["Structured Query Language", "Simple Query Language", "System Query Logic", "Standard Query Loop"], "correct": 0, "difficulty": "easy"},
+    {"id": 5, "question": "Which of these is NOT a valid Python data type?", "options": ["list", "tuple", "array", "dict"], "correct": 2, "difficulty": "medium"},
+    {"id": 6, "question": "What is the worst-case time complexity of Quick Sort?", "options": ["O(n)", "O(n log n)", "O(n²)", "O(log n)"], "correct": 2, "difficulty": "medium"},
+    {"id": 7, "question": "Which protocol is used for secure web communication?", "options": ["HTTP", "FTP", "HTTPS", "SMTP"], "correct": 2, "difficulty": "easy"},
+    {"id": 8, "question": "What is a foreign key in a database?", "options": ["A key that locks the database", "A primary key from another table", "An encrypted key", "A key for external access"], "correct": 1, "difficulty": "medium"},
+    {"id": 9, "question": "Which of the following is a NoSQL database?", "options": ["MySQL", "PostgreSQL", "MongoDB", "Oracle"], "correct": 2, "difficulty": "easy"},
+    {"id": 10, "question": "What does OOP stand for?", "options": ["Object Oriented Programming", "Open Online Platform", "Ordered Operation Process", "Output Oriented Protocol"], "correct": 0, "difficulty": "easy"},
+    {"id": 11, "question": "Which data structure is best for implementing a priority queue?", "options": ["Array", "Linked List", "Heap", "Stack"], "correct": 2, "difficulty": "hard"},
+    {"id": 12, "question": "What is the output of `print(2 ** 3 ** 2)` in Python?", "options": ["64", "512", "8", "81"], "correct": 1, "difficulty": "hard"},
+    {"id": 13, "question": "Which CSS property is used to make text bold?", "options": ["text-style", "font-weight", "text-weight", "font-bold"], "correct": 1, "difficulty": "easy"},
+    {"id": 14, "question": "What is the purpose of the `finally` block in exception handling?", "options": ["Runs only on error", "Runs only on success", "Always runs", "Catches exceptions"], "correct": 2, "difficulty": "medium"},
+    {"id": 15, "question": "Which algorithm is used to find the shortest path in a weighted graph?", "options": ["BFS", "DFS", "Dijkstra's", "Bubble Sort"], "correct": 2, "difficulty": "hard"},
+    {"id": 16, "question": "What is the default port for HTTP?", "options": ["21", "25", "80", "443"], "correct": 2, "difficulty": "easy"},
+    {"id": 17, "question": "In Git, what does `git merge` do?", "options": ["Deletes a branch", "Combines two branches", "Creates a new repo", "Pushes changes"], "correct": 1, "difficulty": "easy"},
+    {"id": 18, "question": "What is the space complexity of merge sort?", "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"], "correct": 2, "difficulty": "hard"},
+    {"id": 19, "question": "Which HTML tag is used for the largest heading?", "options": ["<head>", "<h6>", "<h1>", "<header>"], "correct": 2, "difficulty": "easy"},
+    {"id": 20, "question": "What is polymorphism in OOP?", "options": ["Hiding data", "Multiple inheritance", "Same interface different behavior", "Code reuse"], "correct": 2, "difficulty": "medium"},
+    {"id": 21, "question": "Which of these is a valid HTTP status code for 'Not Found'?", "options": ["200", "301", "404", "500"], "correct": 2, "difficulty": "easy"},
+    {"id": 22, "question": "What is a deadlock in operating systems?", "options": ["Fast execution", "Processes waiting for each other", "Memory overflow", "CPU overload"], "correct": 1, "difficulty": "hard"},
+    {"id": 23, "question": "Which JavaScript method converts JSON string to object?", "options": ["JSON.stringify()", "JSON.parse()", "JSON.convert()", "JSON.decode()"], "correct": 1, "difficulty": "medium"},
+    {"id": 24, "question": "What does FIFO stand for?", "options": ["First In First Out", "Final Input Final Output", "First Index First Output", "File In File Out"], "correct": 0, "difficulty": "easy"},
+    {"id": 25, "question": "What is the Big-O complexity of accessing an element in a hash table?", "options": ["O(n)", "O(log n)", "O(1)", "O(n²)"], "correct": 2, "difficulty": "medium"},
+    {"id": 26, "question": "Which layer of the OSI model handles routing?", "options": ["Transport", "Network", "Data Link", "Session"], "correct": 1, "difficulty": "hard"},
+    {"id": 27, "question": "What is an API?", "options": ["Application Programming Interface", "Automated Program Integration", "Application Process Input", "Advanced Programming Instruction"], "correct": 0, "difficulty": "easy"},
+    {"id": 28, "question": "Which Python keyword is used to define a function?", "options": ["func", "define", "def", "function"], "correct": 2, "difficulty": "easy"},
+    {"id": 29, "question": "What is the purpose of normalization in databases?", "options": ["Speed up queries", "Reduce redundancy", "Add more tables", "Encrypt data"], "correct": 1, "difficulty": "medium"},
+]
+
+def get_daily_question_for_date(date_str):
+    """Get a deterministic question for a given date"""
+    import hashlib
+    h = int(hashlib.md5(date_str.encode()).hexdigest(), 16)
+    idx = h % len(QUESTION_BANK)
+    return QUESTION_BANK[idx]
+
+# ============================================================
+# DAILY CHALLENGE ENDPOINTS
+# ============================================================
+
+@app.route('/api/daily/question', methods=['GET'])
+def get_daily_question():
+    """Get today's daily question + check if already attempted"""
+    name = request.args.get("name", "").strip()
+    date = request.args.get("date", "").strip()
+    
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+    
+    if not date:
+        date = datetime.now().date().isoformat()
+    
+    student = get_student(name)
+    if not student:
+        return jsonify({"error": f"Student '{name}' not found"}), 404
+    
+    question = get_daily_question_for_date(date)
+    completions = student.get("daily_completions", {})
+    already_done = date in completions
+    
+    result = {
+        "date": date,
+        "question": question["question"],
+        "options": question["options"],
+        "difficulty": question["difficulty"],
+        "question_id": question["id"],
+        "already_attempted": already_done,
+        "streak": student.get("streak", 0)
+    }
+    
+    if already_done:
+        result["previous_result"] = completions[date]
+    
+    return jsonify(result)
+
+
+@app.route('/api/daily/submit', methods=['POST'])
+def submit_daily():
+    """Submit daily challenge answer"""
+    data = request.json if request.json else {}
+    name = data.get("name", "").strip()
+    date = data.get("date", "").strip()
+    answer_index = data.get("answer_index")
+    is_old = data.get("is_old", False)
+    
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+    if answer_index is None:
+        return jsonify({"error": "answer_index is required"}), 400
+    
+    if not date:
+        date = datetime.now().date().isoformat()
+    
+    student = get_student(name)
+    if not student:
+        return jsonify({"error": f"Student '{name}' not found"}), 404
+    
+    # Check if already attempted this date
+    completions = student.get("daily_completions", {})
+    if date in completions:
+        return jsonify({"error": "Already attempted this question", "already_attempted": True}), 400
+    
+    # Get the correct answer
+    question = get_daily_question_for_date(date)
+    correct = int(answer_index) == question["correct"]
+    
+    # Calculate ELO change
+    today = datetime.now().date().isoformat()
+    if correct:
+        elo_change = 5 if is_old else 15  # +5 for old, +15 for today
+    else:
+        elo_change = -5
+    
+    new_elo = max(800, student.get("elo", 1000) + elo_change)
+    
+    # Update streak (only for today's question, not old ones)
+    if not is_old:
+        student = process_active_day(student)
+    
+    # Record completion
+    completions[date] = {"correct": correct, "is_old": is_old, "elo_change": elo_change}
+    
+    # Update student
+    update_data = {
+        "elo": new_elo,
+        "tier": get_tier(new_elo),
+        "daily_completions": completions,
+        "activity": student.get("activity", 0) + 1
+    }
+    
+    if not is_old:
+        update_data["streak"] = student.get("streak", 0)
+        update_data["last_active_date"] = student.get("last_active_date")
+    
+    update_student(name, update_data)
+    
+    updated = get_student(name)
+    return jsonify({
+        "correct": correct,
+        "elo_change": elo_change,
+        "new_elo": updated["elo"],
+        "streak": updated.get("streak", 0),
+        "correct_answer": question["correct"],
+        "student": updated
+    })
+
+
+@app.route('/api/daily/old', methods=['GET'])
+def get_old_questions():
+    """Get past 7 days' questions that user hasn't completed yet"""
+    name = request.args.get("name", "").strip()
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+        
+    student = get_student(name)
+    if not student:
+        return jsonify({"error": f"Student '{name}' not found"}), 404
+    
+    completions = student.get("daily_completions", {})
+    today = datetime.now().date()
+    old_questions = []
+    
+    for i in range(1, 8):  # Past 7 days
+        past_date = (today - timedelta(days=i)).isoformat()
+        if past_date not in completions:
+            q = get_daily_question_for_date(past_date)
+            old_questions.append({
+                "date": past_date,
+                "question": q["question"],
+                "options": q["options"],
+                "difficulty": q["difficulty"],
+                "question_id": q["id"],
+                "is_old": True
+            })
+    
+    return jsonify(old_questions)
+
 
 # ============================================================
 # TOURNAMENT ENDPOINTS
@@ -412,6 +587,64 @@ def get_my_match():
             return jsonify(match)
             
     return jsonify({}) # Empty object if no match
+
+@app.route('/api/tournament/practice', methods=['POST'])
+def tournament_practice():
+    """Submit a practice mode result (solo quiz inside tournament)"""
+    data = request.json if request.json else {}
+    name = data.get("name", "").strip()
+    
+    if not name or not student_exists(name):
+        return jsonify({"error": "Valid student name is required"}), 400
+    
+    try:
+        total_q = int(data.get("total_questions", 1))
+        correct = int(data.get("correct_answers", 0))
+        avg_time = float(data.get("avg_time", 1.0))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid data format"}), 400
+    
+    student = get_student(name)
+    
+    # Update stats
+    old_quizzes = float(student.get("quizzes", 0))
+    old_accuracy = float(student.get("accuracy", 0))
+    old_speed = float(student.get("speed", 1.0))
+    
+    new_quizzes = old_quizzes + 1
+    current_accuracy = (correct / total_q) * 100 if total_q > 0 else 0
+    new_accuracy = ((old_accuracy * old_quizzes) + current_accuracy) / new_quizzes
+    new_speed = ((old_speed * old_quizzes) + avg_time) / new_quizzes
+    
+    # ELO calculation — practice uses medium difficulty baseline
+    player_elo = student.get("elo", 1000)
+    opponent_elo = 1400  # medium difficulty
+    result = correct / total_q if total_q > 0 else 0
+    expected = 1 / (1 + 10 ** ((opponent_elo - player_elo) / 400))
+    k = 32
+    new_elo = max(800, int(round(player_elo + k * (result - expected))))
+    
+    student = process_active_day(student)
+    
+    update_student(name, {
+        "elo": new_elo,
+        "tier": get_tier(new_elo),
+        "accuracy": round(new_accuracy, 1),
+        "quizzes": int(new_quizzes),
+        "speed": round(new_speed, 2),
+        "activity": student.get("activity", 0) + 1,
+        "streak": student.get("streak", 0),
+        "last_active_date": student.get("last_active_date")
+    })
+    
+    updated = get_student(name)
+    return jsonify({
+        "score": correct,
+        "total": total_q,
+        "elo_change": new_elo - player_elo,
+        "new_elo": new_elo,
+        "student": updated
+    })
 
 # ============================================================
 # STATIC FILE SERVING
