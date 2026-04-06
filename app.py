@@ -10,7 +10,7 @@ from tournament import (
 )
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="*")
 
 # ============================================================
 # STUDENT ENDPOINTS
@@ -42,8 +42,8 @@ def get_student_api(name):
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """Login or create a student"""
-    data = request.json
+    """Login existing user OR create new user"""
+    data = request.json if request.json else {}
     name = data.get("name", "").strip()
     
     if not name:
@@ -54,36 +54,15 @@ def login():
     
     student = get_student(name)
     
+    # Login existing user
     if student:
         return jsonify({
             "status": "success",
             "message": "Login successful",
             "data": student
         })
-    else:
-        return jsonify({
-            "status": "error",
-            "message": "Account not found. Please create an account."
-        }), 404
-
-@app.route('/api/signup', methods=['POST'])
-def signup():
-    """Create a new student account"""
-    data = request.json
-    name = data.get("name", "").strip()
     
-    if not name:
-        return jsonify({
-            "status": "error",
-            "message": "Name is required"
-        }), 400
-    
-    if student_exists(name):
-        return jsonify({
-            "status": "error",
-            "message": "Account already exists. Please login."
-        }), 400
-        
+    # Create new user if not exists
     if add_student(name):
         student = get_student(name)
         return jsonify({
@@ -106,7 +85,7 @@ def update_student_api(name):
             "message": f"Student '{name}' not found"
         }), 404
     
-    data = request.json
+    data = request.json if request.json else {}
     if update_student(name, data):
         student = get_student(name)
         return jsonify({
@@ -123,7 +102,7 @@ def update_student_api(name):
 @app.route('/api/elo/update', methods=['POST'])
 def update_elo():
     """Update ELO after a quiz/match"""
-    data = request.json
+    data = request.json if request.json else {}
     name = data.get("name", "").strip()
     elo_change = data.get("elo_change", 0)
     
@@ -134,7 +113,7 @@ def update_elo():
         }), 404
     
     student = get_student(name)
-    new_elo = max(800, student["elo"] + elo_change)
+    new_elo = max(800, student.get("elo", 1200) + elo_change)
     
     update_student(name, {
         "elo": new_elo,
@@ -164,7 +143,7 @@ def get_tournament_api():
 @app.route('/api/tournament/join', methods=['POST'])
 def join_tournament():
     """Join the tournament"""
-    data = request.json
+    data = request.json if request.json else {}
     name = data.get("name", "").strip()
     
     if not student_exists(name):
@@ -175,16 +154,14 @@ def join_tournament():
     
     tournament = get_tournament()
     
-    # Check if tournament is already running
-    if tournament.get("status") == "running":
+    if tournament.get("status") in ["running", "completed"]:
         return jsonify({
             "status": "error",
-            "message": "Tournament is already running"
+            "message": "Tournament is already running or completed"
         }), 400
     
-    # Check if player already joined
     players = tournament.get("players", [])
-    if any(p == name for p in players):
+    if name in players:
         return jsonify({
             "status": "error",
             "message": f"'{name}' already joined"
@@ -205,13 +182,13 @@ def join_tournament():
 
 @app.route('/api/tournament/start', methods=['POST'])
 def start_tournament():
-    """Start the tournament"""
+    """Start the tournament and generate round robin matches"""
     tournament = get_tournament()
     
-    if tournament.get("status") == "running":
+    if tournament.get("status") in ["running", "completed"]:
         return jsonify({
             "status": "error",
-            "message": "Tournament is already running"
+            "message": "Tournament is already running or completed"
         }), 400
     
     players_names = tournament.get("players", [])
@@ -221,10 +198,18 @@ def start_tournament():
             "message": "Need at least 2 players to start tournament"
         }), 400
     
-    # Get player objects
+    all_students = get_all_students()
+    players_data = [p for p in all_students if p["name"] in players_names]
+    
+    matches = generate_round_robin_matches(players_data)
+    
+    for i, match in enumerate(matches):
+        match["match_id"] = i
+        match["played_p1"] = False
+        match["played_p2"] = False
+        
     tournament["status"] = "running"
-    if "scores" not in tournament:
-        tournament["scores"] = {}
+    tournament["matches"] = matches
     
     save_tournament(tournament)
     
@@ -233,26 +218,54 @@ def start_tournament():
         "message": "Tournament started"
     })
 
-@app.route('/api/tournament/play', methods=['POST'])
-def play_tournament():
-    """Submit a single player tournament run score"""
-    data = request.json
-    name = data.get("name")
+@app.route('/api/tournament/submit', methods=['POST'])
+def submit_match():
+    """Submit a tournament match result"""
+    data = request.json if request.json else {}
+    match_id = data.get("match_id")
+    player = data.get("player")
     score = data.get("score", 0)
     
     tournament = get_tournament()
     if tournament.get("status") != "running":
         return jsonify({"status": "error", "message": "Tournament not running"}), 400
         
-    scores = tournament.get("scores", {})
-    scores[name] = scores.get(name, 0) + score
-    tournament["scores"] = scores
-    
-    student = get_student(name)
-    if student:
-        new_elo = student["elo"] + (score * 15)
-        update_student(name, {"elo": new_elo, "tier": get_tier(new_elo)})
+    matches = tournament.get("matches", [])
+    if match_id is None or not isinstance(match_id, int) or match_id < 0 or match_id >= len(matches):
+        return jsonify({"status": "error", "message": "Invalid match_id"}), 400
         
+    match = matches[match_id]
+    
+    if match["player1"] == player:
+        match["points_p1"] = score
+        match["played_p1"] = True
+    elif match["player2"] == player:
+        match["points_p2"] = score
+        match["played_p2"] = True
+    else:
+        return jsonify({"status": "error", "message": "Player not in this match"}), 400
+        
+    # Standardize result if both players have played
+    if match.get("played_p1") and match.get("played_p2") and match.get("result") is None:
+        if match["points_p1"] > match["points_p2"]:
+            match["result"] = match["player1"]
+            submit_match_result(match["player1"], match["player2"], "player1_wins")
+        elif match["points_p2"] > match["points_p1"]:
+            match["result"] = match["player2"]
+            submit_match_result(match["player1"], match["player2"], "player2_wins")
+        else:
+            match["result"] = "draw"
+            submit_match_result(match["player1"], match["player2"], "draw")
+            
+    tournament["matches"] = matches
+    
+    if check_tournament_complete(tournament):
+        tournament["status"] = "completed"
+        standings = get_standings(get_all_students(), matches)
+        if standings:
+            winner = standings[0]["name"]
+            award_champion(winner)
+            
     save_tournament(tournament)
     return jsonify({"status": "success", "message": "Score submitted"})
 
@@ -260,23 +273,13 @@ def play_tournament():
 def standings():
     """Get tournament standings"""
     tournament = get_tournament()
-    scores = tournament.get("scores", {})
+    matches = tournament.get("matches", [])
     players_names = tournament.get("players", [])
     
     all_students = get_all_students()
-    players_dict = {p["name"]: p for p in all_students}
+    tournament_players = [p for p in all_students if p["name"] in players_names]
     
-    standing_list = []
-    for p in players_names:
-        student = players_dict.get(p, {})
-        standing_list.append({
-            "name": p,
-            "points": scores.get(p, 0),
-            "elo": student.get("elo", 1200)
-        })
-        
-    standing_list.sort(key=lambda x: (-x["points"], -x["elo"]))
-    
+    standing_list = get_standings(tournament_players, matches)
     return jsonify({
         "status": "success",
         "data": standing_list
@@ -292,7 +295,6 @@ def reset_tournament():
         "results": []
     }
     save_tournament(tournament)
-    
     return jsonify({
         "status": "success",
         "message": "Tournament reset"
@@ -308,19 +310,16 @@ def get_my_match():
             "status": "error",
             "message": f"Student '{name}' not found"
         }), 404
-    
+        
     tournament = get_tournament()
     matches = tournament.get("matches", [])
     
-    # Find first pending match for this student
     for match in matches:
-        if (match["player1"] == name or match["player2"] == name) and match["result"] is None:
-            return jsonify({
-                "status": "success",
-                "data": match
-            })
-    
-    # No pending match
+        if match["player1"] == name and not match.get("played_p1"):
+            return jsonify({"status": "success", "data": match})
+        if match["player2"] == name and not match.get("played_p2"):
+            return jsonify({"status": "success", "data": match})
+            
     return jsonify({
         "status": "success",
         "message": "No pending matches",
@@ -331,7 +330,6 @@ def get_my_match():
 # STATIC FILE SERVING
 # ============================================================
 
-# Serve static files (CSS, JS)
 @app.route('/css/<path:filename>')
 def serve_css(filename):
     return send_from_directory('css', filename)
@@ -340,7 +338,6 @@ def serve_css(filename):
 def serve_js(filename):
     return send_from_directory('js', filename)
 
-# Serve HTML pages
 @app.route('/', defaults={'page': 'index.html'})
 @app.route('/<page>')
 def serve_page(page):
@@ -348,7 +345,7 @@ def serve_page(page):
         try:
             return send_from_directory('.', page)
         except:
-            return send_from_directory('.', 'index.html')
+            pass
     return send_from_directory('.', 'index.html')
 
 # ============================================================
@@ -374,4 +371,4 @@ def server_error(error):
 # ============================================================
 
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
