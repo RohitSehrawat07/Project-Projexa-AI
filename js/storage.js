@@ -4,67 +4,40 @@
 //  Uses Flask API + localStorage for session data
 // =============================================
 
-const API_URL = "http://localhost:5000/api";
+const API = "http://localhost:5000/api";
 
-// ── Login or Create Student ──
+// ── Login or Create Student (unified) ──
 async function loginStudent(name) {
   try {
-    const response = await fetch(`${API_URL}/login`, {
+    const res = await fetch(`${API}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name })
+      body: JSON.stringify({ name })
     });
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      // Save current logged-in student to localStorage
-      localStorage.setItem("edurank_current", result.data.name);
-      return result.data;
-    } else {
-      console.error("Login failed:", result.message);
-      return { _error: result.message };
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-    return null;
-  }
-}
 
-// ── Sign up new Student ──
-async function signupStudent(name) {
-  try {
-    const response = await fetch(`${API_URL}/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name })
-    });
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      localStorage.setItem("edurank_current", result.data.name);
-      return result.data;
-    } else {
-      console.error("Signup failed:", result.message);
-      return { _error: result.message };
+    if (!res.ok) {
+      const err = await res.json();
+      return { _error: err.error || "Server error" };
     }
-  } catch (error) {
-    console.error("Signup error:", error);
-    return null;
+
+    const data = await res.json();
+
+    // Save current user to localStorage
+    localStorage.setItem("edurank_current", data.name);
+
+    return data;
+  } catch (err) {
+    console.error("Login error:", err);
+    return { _error: "Cannot connect to server" };
   }
 }
 
 // ── Get all students from backend ──
 async function getAllStudents() {
   try {
-    const response = await fetch(`${API_URL}/students`);
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      console.error("Failed to get students:", result.message);
-      return [];
-    }
+    const res = await fetch(`${API}/students`);
+    if (!res.ok) return [];
+    return await res.json();
   } catch (error) {
     console.error("Get students error:", error);
     return [];
@@ -74,14 +47,10 @@ async function getAllStudents() {
 // ── Get one student by name from backend ──
 async function getStudent(name) {
   try {
-    const response = await fetch(`${API_URL}/students/${encodeURIComponent(name)}`);
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      return null;
-    }
+    const res = await fetch(`${API}/students/${encodeURIComponent(name)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
   } catch (error) {
     console.error("Get student error:", error);
     return null;
@@ -108,48 +77,55 @@ async function getCurrentStudent() {
 // ── Update a student's data on backend ──
 async function updateStudent(name, newData) {
   try {
-    const response = await fetch(`${API_URL}/students/${encodeURIComponent(name)}`, {
+    const res = await fetch(`${API}/students/${encodeURIComponent(name)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newData)
     });
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      console.error("Update failed:", result.message);
-      return null;
-    }
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
   } catch (error) {
     console.error("Update error:", error);
     return null;
   }
 }
 
-// ── Add a brand new student ──
+// ── Add a brand new student (alias for loginStudent) ──
 async function addStudent(name) {
-  return await signupStudent(name);
+  return await loginStudent(name);
 }
 
 // ── Update ELO after quiz/match ──
 async function updateELO(name, elo_change) {
   try {
-    const response = await fetch(`${API_URL}/elo/update`, {
+    const res = await fetch(`${API}/elo/update`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name, elo_change: elo_change })
+      body: JSON.stringify({ name, elo_change })
     });
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      console.error("ELO update failed:", result.message);
-      return null;
-    }
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
   } catch (error) {
     console.error("ELO update error:", error);
+    return null;
+  }
+}
+
+// ── Submit quiz result ──
+async function submitQuiz(payload) {
+  try {
+    const res = await fetch(`${API}/quiz/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
+  } catch (error) {
+    console.error("Quiz submit error:", error);
     return null;
   }
 }
@@ -166,11 +142,11 @@ function getTier(elo) {
 // ── Get tier color ──
 function getTierColor(tier) {
   const colors = {
-    "Diamond": "#a855f7",
+    "Diamond":  "#a855f7",
     "Platinum": "#06b6d4",
-    "Gold":    "#81b64c",
-    "Silver":  "#4a9fd4",
-    "Bronze":  "#c4771b"
+    "Gold":     "#81b64c",
+    "Silver":   "#4a9fd4",
+    "Bronze":   "#c4771b"
   };
   return colors[tier] || "#999693";
 }
@@ -195,13 +171,13 @@ function predictStudent(s) {
     + (Math.min(s.streak * 3, 30) * 0.3)
     + (s.speed * 4 * 0.2)
     + (s.activity * 0.1);
-  if (score >= 75) return { label:"Excellent", icon:"🌟", color:"#81b64c" };
-  if (score >= 55) return { label:"Good",      icon:"✅", color:"#4a9fd4" };
-  if (score >= 35) return { label:"Average",   icon:"⚠️",  color:"#f6f669" };
-  return              { label:"At Risk",   icon:"🚨", color:"#e44d4d" };
+  if (score >= 75) return { label: "Excellent", icon: "🌟", color: "#81b64c" };
+  if (score >= 55) return { label: "Good",      icon: "✅", color: "#4a9fd4" };
+  if (score >= 35) return { label: "Average",   icon: "⚠️",  color: "#f6f669" };
+  return                   { label: "At Risk",   icon: "🚨", color: "#e44d4d" };
 }
 
-// ── Save match result to history ──
+// ── Save match result to history (localStorage cache) ──
 function saveMatchResult(result) {
   let history = JSON.parse(
     localStorage.getItem('edurank_match_history') || '[]'
@@ -225,14 +201,10 @@ function getMatchHistory() {
 // Get tournament data
 async function getTournament() {
   try {
-    const response = await fetch(`${API_URL}/tournament`);
-    const result = await response.json();
-    
-    if (result.status === "success") {
-      return result.data;
-    } else {
-      return null;
-    }
+    const res = await fetch(`${API}/tournament`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.error ? null : data;
   } catch (error) {
     console.error("Get tournament error:", error);
     return null;
@@ -242,62 +214,82 @@ async function getTournament() {
 // Join tournament
 async function joinTournament(name) {
   try {
-    const response = await fetch(`${API_URL}/tournament/join`, {
+    const res = await fetch(`${API}/tournament/join`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name })
+      body: JSON.stringify({ name })
     });
-    const result = await response.json();
-    return result;
+    return await res.json();
   } catch (error) {
     console.error("Join tournament error:", error);
-    return { status: "error", message: error.message };
+    return { error: error.message };
   }
 }
 
 // Start tournament
 async function startTournament() {
   try {
-    const response = await fetch(`${API_URL}/tournament/start`, {
+    const res = await fetch(`${API}/tournament/start`, {
       method: "POST"
     });
-    const result = await response.json();
-    return result;
+    return await res.json();
   } catch (error) {
     console.error("Start tournament error:", error);
-    return { status: "error", message: error.message };
+    return { error: error.message };
   }
 }
 
-// Submit tournament run score
-async function playTournament(name, score) {
+// Submit tournament match score
+async function submitTournamentMatch(match_id, player, score) {
   try {
-    const response = await fetch(`${API_URL}/tournament/play`, {
+    const res = await fetch(`${API}/tournament/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name,
-        score: score
-      })
+      body: JSON.stringify({ match_id, player, score })
     });
-    const result = await response.json();
-    return result;
+    return await res.json();
   } catch (error) {
-    console.error("Play tournament error:", error);
-    return { status: "error", message: error.message };
+    console.error("Submit match error:", error);
+    return { error: error.message };
+  }
+}
+
+// Get my next match
+async function getMyMatch(name) {
+  try {
+    const res = await fetch(`${API}/tournament/mymatch?name=${encodeURIComponent(name)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Empty object = no match
+    if (!data || Object.keys(data).length === 0) return null;
+    return data.error ? null : data;
+  } catch (error) {
+    console.error("Get my match error:", error);
+    return null;
+  }
+}
+
+// Get tournament standings
+async function getTournamentStandings() {
+  try {
+    const res = await fetch(`${API}/tournament/standings`);
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (error) {
+    console.error("Get standings error:", error);
+    return [];
   }
 }
 
 // Reset tournament
 async function resetTournament() {
   try {
-    const response = await fetch(`${API_URL}/tournament/reset`, {
+    const res = await fetch(`${API}/tournament/reset`, {
       method: "POST"
     });
-    const result = await response.json();
-    return result;
+    return await res.json();
   } catch (error) {
     console.error("Reset tournament error:", error);
-    return { status: "error", message: error.message };
+    return { error: error.message };
   }
 }
