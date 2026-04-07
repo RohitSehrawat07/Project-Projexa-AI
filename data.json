@@ -68,11 +68,24 @@
       "elo": 1000,
       "tier": "Bronze",
       "accuracy": 0,
-      "streak": 0,
+      "streak": 1,
       "speed": 1,
-      "activity": 0,
+      "activity": 2,
       "quizzes": 0,
-      "badge": "None"
+      "badge": "None",
+      "last_active_date": "2026-04-07",
+      "daily_completions": {
+        "2026-04-07": {
+          "correct": false,
+          "is_old": false,
+          "elo_change": -5
+        },
+        "2026-04-02": {
+          "correct": true,
+          "is_old": true,
+          "elo_change": 5
+        }
+      }
     },
     {
       "name": "NewTestUser",
