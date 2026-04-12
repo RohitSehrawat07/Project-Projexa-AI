@@ -940,5 +940,117 @@ textarea::placeholder {
 
   h2 {
     font-size: 1.5rem;
-  }
 }
+}
+
+/* =============================================
+   UNIFIED TOP NAVIGATION
+   ============================================= */
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topnav .logo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.topnav .logo span {
+  color: var(--green);
+}
+
+.topnav .nav-center {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.topnav .nav-center a {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.15s;
+}
+
+.topnav .nav-center a:hover {
+  color: var(--text);
+}
+
+.topnav .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.topnav .nav-student {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.topnav .nav-student strong {
+  color: var(--text);
+}
+
+.topnav .nav-elo {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--gold);
+  background: rgba(246, 246, 105, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.topnav .logout-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.topnav .logout-btn:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* LAN BANNER */
+.lan-banner {
+  background: var(--blue);
+  color: #fff;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.4rem;
+  letter-spacing: 0.05em;
+  display: none; /* hidden by default, enabled via JS if LAN is active */
+}
+
+/* RESPONSIVE NAV */
+@media (max-width: 900px) {
+  .topnav {
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .topnav .nav-center {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

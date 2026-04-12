@@ -41,10 +41,8 @@ window.onload = async function() {
   const sortedStudents = [...students].sort((a,b) => b.elo - a.elo);
   const rank = sortedStudents.findIndex(s => s.name.toLowerCase() === name.toLowerCase()) + 1;
 
-  // NAV
-  document.getElementById('navName').textContent = student.name;
-  document.getElementById('navElo').textContent = student.elo;
-
+  // NAV is handled globally by syncUser() now
+  
   // WELCOME
   document.getElementById('titleName').textContent = student.name;
 

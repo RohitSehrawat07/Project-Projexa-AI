@@ -6,19 +6,92 @@
 <title>EduRank — Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/quiz.css">
+<style>
+  .quiz-container { max-width: 600px; margin: 3rem auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; }
+  .diff-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+  .diff-card { padding: 1.5rem; text-align: center; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .diff-card:hover { border-color: var(--green); transform: translateY(-3px); }
+  .diff-card h3 { color: var(--green); margin-bottom: 0.5rem; }
+  .diff-card p { font-size: 0.8rem; color: var(--muted); }
+  
+  .run-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .run-title { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+  .timer { font-family: 'Source Code Pro', monospace; font-size: 1.8rem; font-weight: bold; color: var(--green); }
+  #qCounter { color: var(--muted); font-weight: 600; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Source Code Pro', monospace; }
+  .q-text { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text); font-weight: 600; line-height: 1.5; }
+  .opt-btn { display: block; width: 100%; padding: 1rem 1.2rem; font-size: 0.95rem; text-align: left; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.6rem; cursor: pointer; transition: all 0.15s; font-family: 'Montserrat', sans-serif; color: var(--text); }
+  .opt-btn:hover { border-color: var(--green); background: var(--surface2); }
+  .opt-btn.selected { border-color: var(--green); background: rgba(129,182,76,0.1); color: var(--green); font-weight: 600; pointer-events: none;}
+  .btn-next { width: 100%; padding: 0.9rem; border-radius: 6px; background: var(--green); color: #fff; border: none; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 0.8rem; font-family: 'Montserrat', sans-serif; }
+  .btn-next:disabled { opacity: 0.5; pointer-events: none; }
+  .btn-next:hover { background: var(--green2); }
+  
+  .result-screen { text-align: center; }
+  .result-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .score-display { font-size: 2rem; font-weight: 800; color: var(--green); margin-bottom: 0.5rem; font-family: 'Source Code Pro', monospace; }
+  .elo-gain { color: var(--gold); font-weight: 700; font-size: 1.1rem; font-family: 'Source Code Pro', monospace; margin-bottom: 2rem;}
+</style>
 <script src="js/storage.js"></script>
 </head>
 <body>
+<div class="lan-banner" id="lanBanner"></div>
 <nav class="topnav">
-  <a href="index.html" class="logo">Edu<span>Rank</span></a>
-  <a href="dashboard.html" class="back-btn">← Dashboard</a>
+  <div class="nav-left">
+    <a href="dashboard.html" class="logo">Edu<span>Rank</span></a>
+  </div>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="daily.html">Daily</a>
+    <a href="tournament.html">Tournament</a>
+    <a href="leaderboard.html">Leaderboard</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-student"><strong id="globalNavName">—</strong></div>
+    <div class="nav-elo" id="globalNavElo">—</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 </nav>
-<div class="stub">
-  <div class="stub-icon">⚔</div>
-  <div class="stub-title">Quiz Engine</div>
-  <div class="stub-sub">Ranked quiz with timer, difficulty levels, and ELO update after submission. Coming soon.</div>
-  <a href="dashboard.html" class="btn">← Back to Dashboard</a>
+
+<div class="quiz-container" id="difficultySelection">
+  <h2>Select Difficulty</h2>
+  <p style="color:var(--muted); margin-top:0.5rem; font-size:0.9rem;">Harder difficulties award more ELO for correct answers, but penalize more for incorrect ones.</p>
+  <div class="diff-cards">
+    <div class="diff-card" onclick="startQuiz('easy')">
+      <h3>Easy</h3>
+      <p>Beginner concepts</p>
+    </div>
+    <div class="diff-card" onclick="startQuiz('medium')">
+      <h3 style="color:var(--cyan)">Medium</h3>
+      <p>Intermediate logic</p>
+    </div>
+    <div class="diff-card" onclick="startQuiz('hard')">
+      <h3 style="color:var(--red)">Hard</h3>
+      <p>Advanced mastery</p>
+    </div>
+  </div>
 </div>
+
+<div class="quiz-container" id="quizScreen" style="display:none">
+  <div class="run-header">
+      <div class="run-title">⚔️ Quiz Run</div>
+      <div class="timer" id="timer">0:15</div>
+  </div>
+  <div id="qCounter">Question 1 of 5</div>
+  <div class="q-text" id="qText">Loading question...</div>
+  <div id="optionsCont"></div>
+  <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+</div>
+
+<div class="quiz-container result-screen" id="resultScreen" style="display:none">
+  <div class="result-icon">🏆</div>
+  <h2 style="margin-bottom: 0.5rem;">Quiz Completed!</h2>
+  <div class="score-display">Score: <span id="finalScore">0 / 5</span> (<span id="finalPercent">0%</span>)</div>
+  <p class="elo-gain" id="eloGain">+0 ELO</p>
+  <button class="btn-next" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
+</div>
+
+<script src="js/questions.js"></script>
+<script src="js/quiz.js"></script>
 </body>
 </html>

@@ -2,15 +2,15 @@
   "students": [
     {
       "name": "Aman",
-      "elo": 1198,
+      "elo": 1178,
       "tier": "Bronze",
-      "accuracy": 20.0,
+      "accuracy": 26.7,
       "streak": 1,
-      "speed": 4.73,
-      "activity": 2,
-      "quizzes": 1,
+      "speed": 6.36,
+      "activity": 4,
+      "quizzes": 3,
       "badge": "None",
-      "last_active_date": "2026-04-06",
+      "last_active_date": "2026-04-12",
       "daily_completions": {
         "2026-04-06": {
           "correct": true,
@@ -65,14 +65,14 @@
     },
     {
       "name": "Om",
-      "elo": 1000,
-      "tier": "Bronze",
+      "elo": 1224,
+      "tier": "Silver",
       "accuracy": 0,
       "streak": 1,
       "speed": 1,
       "activity": 2,
       "quizzes": 0,
-      "badge": "None",
+      "badge": "Champion",
       "last_active_date": "2026-04-07",
       "daily_completions": {
         "2026-04-07": {
@@ -120,10 +120,7 @@
   ],
   "tournament": {
     "status": "not_started",
-    "players": [
-      "Om",
-      "Aman"
-    ],
+    "players": [],
     "matches": [],
     "results": []
   }

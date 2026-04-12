@@ -11,9 +11,23 @@
 <script src="js/predict.js"></script>
 </head>
 <body>
+<div class="lan-banner" id="lanBanner"></div>
 <nav class="topnav">
-  <a href="index.html" class="logo">Edu<span>Rank</span></a>
-  <a href="dashboard.html" class="back-btn">← Dashboard</a>
+  <div class="nav-left">
+    <a href="dashboard.html" class="logo">Edu<span>Rank</span></a>
+  </div>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="daily.html">Daily</a>
+    <a href="tournament.html">Tournament</a>
+    <a href="leaderboard.html">Leaderboard</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-student"><strong id="globalNavName">—</strong></div>
+    <div class="nav-elo" id="globalNavElo">—</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 </nav>
 <div class="main">
   <div class="page-label">// AI Prediction Engine</div>

@@ -14,12 +14,22 @@
 <body>
 
 <!-- NAV -->
+<div class="lan-banner" id="lanBanner"></div>
 <nav class="topnav">
-  <a href="index.html" class="logo">Edu<span>Rank</span></a>
+  <div class="nav-left">
+    <a href="dashboard.html" class="logo">Edu<span>Rank</span></a>
+  </div>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="daily.html">Daily</a>
+    <a href="tournament.html">Tournament</a>
+    <a href="leaderboard.html">Leaderboard</a>
+  </div>
   <div class="nav-right">
-    <div class="nav-student">Welcome, <strong id="navName">—</strong></div>
-    <div class="nav-elo" id="navElo">—</div>
-    <button class="logout-btn" onclick="doLogout()">Logout</button>
+    <div class="nav-student"><strong id="globalNavName">—</strong></div>
+    <div class="nav-elo" id="globalNavElo">—</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 </nav>
 

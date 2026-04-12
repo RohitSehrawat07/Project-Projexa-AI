@@ -191,6 +191,8 @@ async function submitToBackend(answerIndex, isOld) {
   
   // Re-fetch student data to update UI
   studentData = await getStudent(name);
+  if (typeof syncUser === 'function') await syncUser();
+  
   if (document.getElementById('streakNum')) {
     document.getElementById('streakNum').textContent = studentData.streak || 0;
   }
@@ -359,6 +361,8 @@ async function submitOldAnswer() {
   
   // Refresh student data
   studentData = await getStudent(studentData.name);
+  if (typeof syncUser === 'function') await syncUser();
+  
   if (document.getElementById('streakNum')) {
     document.getElementById('streakNum').textContent = studentData.streak || 0;
   }

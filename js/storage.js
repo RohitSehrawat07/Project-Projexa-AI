@@ -4,8 +4,7 @@
 //  Uses Flask API + localStorage for session data
 // =============================================
 
-const API = "http://localhost:5000/api";
-
+const API = window.location.origin + "/api";
 // ── Login or Create Student (unified) ──
 async function loginStudent(name) {
   try {
@@ -230,10 +229,16 @@ function logout() {
 
 // ── Predict student performance ──
 function predictStudent(s) {
-  const score = (s.accuracy * 0.4)
-    + (Math.min(s.streak * 3, 30) * 0.3)
-    + (s.speed * 4 * 0.2)
-    + (s.activity * 0.1);
+  const acc = parseFloat(s.accuracy) || 0;
+  const stk = parseInt(s.streak) || 0;
+  const spd = parseFloat(s.speed) || 0;
+  const act = parseInt(s.activity) || 0;
+  
+  const score = (acc * 0.4)
+    + (Math.min(stk * 3, 30) * 0.3)
+    + (spd * 4 * 0.2)
+    + (act * 0.1);
+    
   if (score >= 75) return { label: "Excellent", icon: "🌟", color: "#81b64c" };
   if (score >= 55) return { label: "Good",      icon: "✅", color: "#4a9fd4" };
   if (score >= 35) return { label: "Average",   icon: "⚠️",  color: "#f6f669" };
@@ -356,3 +361,42 @@ async function resetTournament() {
     return { error: error.message };
   }
 }
+
+// ── SYSTEM STATUS (LAN) ──
+async function getSystemStatus() {
+  try {
+    const res = await fetch(`${API}/system/status`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (error) {
+    return null;
+  }
+}
+
+// ── GLOBAL DATA SYNC ──
+async function syncUser() {
+  const name = localStorage.getItem("edurank_current");
+  if (!name) return;
+  const student = await getStudent(name);
+  if (student) {
+    // Update uniform navbar elements if they exist
+    const navElo = document.getElementById("globalNavElo");
+    if (navElo) navElo.textContent = student.elo;
+    
+    const navName = document.getElementById("globalNavName");
+    if (navName) navName.textContent = student.name;
+    
+    // Dispatch custom event for page-specific UI updates
+    const event = new CustomEvent('edurank_user_synced', { detail: student });
+    window.dispatchEvent(event);
+  }
+  return student;
+}
+
+// ── GLOBAL INITIALIZATION ──
+document.addEventListener('DOMContentLoaded', async () => {
+  // Sync User for Nav updates
+  if (typeof syncUser === 'function') {
+    await syncUser();
+  }
+});

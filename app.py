@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
+import socket
 from database import (
     load_db, save_db, get_all_students, get_student, update_student, add_student,
     get_tier, get_tournament, save_tournament, student_exists
@@ -588,6 +589,67 @@ def get_my_match():
             
     return jsonify({}) # Empty object if no match
 
+@app.route('/api/quiz/submit', methods=['POST'])
+def submit_quiz_api():
+    """Submit a single player quiz result"""
+    data = request.json if request.json else {}
+    name = data.get("name", "").strip()
+    
+    if not name or not student_exists(name):
+        return jsonify({"error": "Valid student name is required"}), 400
+        
+    try:
+        total_q = int(data.get("total_questions", 1))
+        correct = int(data.get("correct_answers", 0))
+        avg_time = float(data.get("avg_time", 1.0))
+        difficulty = data.get("difficulty", "medium")
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid data format"}), 400
+        
+    student = get_student(name)
+    old_quizzes = int(student.get("quizzes", 0))
+    old_accuracy = float(student.get("accuracy", 0))
+    
+    new_quizzes = old_quizzes + 1
+    current_accuracy = (correct / total_q) * 100 if total_q > 0 else 0
+    new_accuracy = ((old_accuracy * old_quizzes) + current_accuracy) / new_quizzes
+    
+    # ELO calculation based on difficulty
+    player_elo = student.get("elo", 1000)
+    opponent_elo = 1200 # default medium
+    if difficulty == "easy": opponent_elo = 800
+    if difficulty == "hard": opponent_elo = 1600
+    
+    result = correct / total_q if total_q > 0 else 0
+    expected = 1 / (1 + 10 ** ((opponent_elo - player_elo) / 400))
+    
+    # Adjust K factor based on total quizzes played (more volatile at start)
+    k = 40 if old_quizzes < 10 else 32
+    
+    elo_change = int(round(k * (result - expected)))
+    new_elo = max(800, player_elo + elo_change)
+    
+    process_active_day(student) # Make active today
+    
+    update_student(name, {
+        "elo": new_elo,
+        "tier": get_tier(new_elo),
+        "accuracy": round(new_accuracy, 1),
+        "quizzes": int(new_quizzes),
+        "activity": student.get("activity", 0) + 1,
+        "streak": student.get("streak", 0),
+        "last_active_date": student.get("last_active_date")
+    })
+    
+    updated = get_student(name)
+    return jsonify({
+        "score": correct,
+        "elo_change": elo_change,
+        "new_elo": new_elo,
+        "student": updated
+    })
+
+
 @app.route('/api/tournament/practice', methods=['POST'])
 def tournament_practice():
     """Submit a practice mode result (solo quiz inside tournament)"""
@@ -681,8 +743,50 @@ def server_error(error):
     return jsonify({"error": "Internal server error"}), 500
 
 # ============================================================
+# SYSTEM ENDPOINTS (LAN READY)
+# ============================================================
+
+def get_lan_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
+@app.route('/api/system/status', methods=['GET'])
+def system_status():
+    """Get system and LAN status"""
+    return jsonify({
+        "status": "online",
+        "lan_ip": get_lan_ip(),
+        "port": 5000
+    })
+
+@app.route('/api/system/reset', methods=['POST'])
+def system_reset():
+    """Reset the database for Demo purposes"""
+    save_db([]) # Clear users
+    save_tournament({
+        "status": "not_started",
+        "players": [],
+        "matches": [],
+        "results": []
+    })
+    return jsonify({"success": True, "message": "Database successfully wiped."})
+
+# ============================================================
 # RUN SERVER
 # ============================================================
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    LAN_IP = get_lan_ip()
+    print(f"\n=============================================")
+    print(f"EDURANK FLASK SERVER IS RUNNING")
+    print(f"=============================================")
+    print(f"Local:      http://127.0.0.1:5000")
+    print(f"LAN/WiFi:   http://{LAN_IP}:5000")
+    print(f"=============================================\n")
+    app.run(host='0.0.0.0', debug=True, port=5000)

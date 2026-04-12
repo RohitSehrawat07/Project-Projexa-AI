@@ -77,6 +77,12 @@ async function handleLogin() {
 
     // Success — redirect to dashboard
     errorEl.textContent = '';
+    
+    // Explicitly sync new login
+    if (typeof syncUser === 'function') {
+      await syncUser();
+    }
+    
     window.location.href = 'dashboard.html';
 
   } catch (error) {
@@ -133,6 +139,12 @@ async function handleSignup() {
 
     // Success — redirect to dashboard
     errorEl.textContent = '';
+    
+    // Explicitly sync new login
+    if (typeof syncUser === 'function') {
+      await syncUser();
+    }
+    
     window.location.href = 'dashboard.html';
 
   } catch (error) {

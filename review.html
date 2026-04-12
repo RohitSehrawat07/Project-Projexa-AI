@@ -6,20 +6,33 @@
 <title>EduRank — Match Review</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/review.css">
 <script src="js/storage.js"></script>
 </head>
 <body>
 <nav class="topnav">
-  <a href="index.html" class="logo">Edu<span>Rank</span></a>
-  <a href="dashboard.html" class="back-btn">← Dashboard</a>
+  <div class="nav-left">
+    <a href="dashboard.html" class="logo">Edu<span>Rank</span></a>
+  </div>
+  <div class="nav-center">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="daily.html">Daily</a>
+    <a href="tournament.html">Tournament</a>
+    <a href="leaderboard.html">Leaderboard</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-student"><strong id="globalNavName">—</strong></div>
+    <div class="nav-elo" id="globalNavElo">—</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 </nav>
-<div class="stub">
-  <div class="stub-icon">🔬</div>
-  <div class="stub-title">Match Review</div>
-  <div class="stub-sub">After every quiz, see a per-question breakdown — time spent, correct/wrong, class average comparison, and Blunder/Great Move labels.</div>
-  <div class="stub-owner">� Coming soon</div>
-  <a href="dashboard.html" class="btn">← Back to Dashboard</a>
+
+<div class="main-content" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <div id="reviewContainer">
+        <!-- Content injected by review.js -->
+    </div>
 </div>
+
+<script src="js/review.js"></script>
 </body>
 </html>

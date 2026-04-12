@@ -1,10 +1,15 @@
 // ── Factor calculations for prediction ──
 function factors(s){
+    const acc = parseFloat(s.accuracy) || 0;
+    const stk = parseInt(s.streak) || 0;
+    const spd = parseFloat(s.speed) || 0;
+    const act = parseInt(s.activity) || 0;
+    
     return[
-      {name:"Accuracy",val:s.accuracy,color:"#4a9fd4",weight:"40%"},
-      {name:"Streak",val:Math.min(s.streak*8,100),color:"#f6f669",weight:"30%"},
-      {name:"Speed",val:s.speed*10,color:"#81b64c",weight:"20%"},
-      {name:"Activity",val:s.activity,color:"#62b0e8",weight:"10%"},
+      {name:"Accuracy",val:acc,color:"#4a9fd4",weight:"40%"},
+      {name:"Streak",val:Math.min(stk*8,100),color:"#f6f669",weight:"30%"},
+      {name:"Speed",val:spd*10,color:"#81b64c",weight:"20%"},
+      {name:"Activity",val:act,color:"#62b0e8",weight:"10%"},
     ];
   }
   window.onload=async function(){

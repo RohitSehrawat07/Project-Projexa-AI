@@ -14,6 +14,7 @@ let startTime = null;
 let totalTime = 0;
 let gameMode = 'competitive'; // or 'practice'
 let submitting = false;
+let myMatchId = null;
 
 // Expanded question bank (15 questions, 5 selected randomly per run)
 const MATCH_QUESTIONS = [
@@ -50,6 +51,16 @@ window.onload = async function() {
   const titleEl = document.querySelector('.run-title');
   if (titleEl) {
     titleEl.textContent = gameMode === 'practice' ? '📝 Practice Run' : '⚔️ Tournament Run';
+  }
+  
+  if (gameMode === 'competitive') {
+      const match = await getMyMatch(currentName);
+      if (!match || match.error || match.match_id === undefined) {
+          alert("You don't have pending matches, returning to tournament.");
+          window.location.href = 'tournament.html';
+          return;
+      }
+      myMatchId = match.match_id;
   }
   
   // Randomly select questions
@@ -146,30 +157,35 @@ async function endRun() {
       correct_answers: score,
       avg_time: Math.round(avgTime * 100) / 100
     });
+    
+    // Display ELO change directly
+    if (result && result.elo_change !== undefined) {
+      const change = result.elo_change;
+      const sign = change >= 0 ? '+' : '';
+      document.getElementById('eloGain').textContent = `${sign}${change} ELO Points`;
+      document.getElementById('eloGain').style.color = change >= 0 ? 'var(--green, #81b64c)' : '#ef4444';
+    } else {
+      document.getElementById('eloGain').textContent = 'ELO update failed';
+    }
+    
   } else {
-    // Competitive mode — use quiz submit endpoint  
-    result = await submitQuiz({
-      name: currentName,
-      total_questions: questions.length,
-      correct_answers: score,
-      avg_time: Math.round(avgTime * 100) / 100,
-      difficulty: 'medium'
-    });
+    // Competitive mode — use Match submit endpoint 
+    result = await submitTournamentMatch(myMatchId, currentName, score);
+    
+    if (result && !result.error) {
+        document.getElementById('eloGain').textContent = "Waiting for opponent...";
+        document.getElementById('eloGain').style.color = 'var(--cyan)';
+        
+        // Let tournament page handle ELO logic during polling
+    } else {
+        document.getElementById('eloGain').textContent = result ? result.error : 'Match submit failed';
+        document.getElementById('eloGain').style.color = '#ef4444';
+    }
   }
   
-  // Display ELO change
-  if (result && result.elo_change !== undefined) {
-    const change = result.elo_change;
-    const sign = change >= 0 ? '+' : '';
-    document.getElementById('eloGain').textContent = `${sign}${change} ELO Points`;
-    document.getElementById('eloGain').style.color = change >= 0 ? 'var(--green, #81b64c)' : '#ef4444';
-  } else if (result) {
-    // Fallback: calculate approximate change
-    const eloEarned = score * 10;
-    document.getElementById('eloGain').textContent = `~+${eloEarned} ELO Points`;
-  } else {
-    document.getElementById('eloGain').textContent = 'ELO update failed – check connection';
-    document.getElementById('eloGain').style.color = '#ef4444';
+  // ELO Sync as per requirement
+  if (typeof syncUser === 'function') {
+      await syncUser();
   }
   
   submitting = false;
