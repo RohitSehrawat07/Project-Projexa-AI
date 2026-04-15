@@ -2,14 +2,14 @@
   "students": [
     {
       "name": "Aman",
-      "elo": 1178,
-      "tier": "Bronze",
+      "elo": 1370,
+      "tier": "Silver",
       "accuracy": 26.7,
       "streak": 1,
       "speed": 6.36,
       "activity": 4,
       "quizzes": 3,
-      "badge": "None",
+      "badge": "Champion",
       "last_active_date": "2026-04-12",
       "daily_completions": {
         "2026-04-06": {
@@ -116,12 +116,39 @@
           "elo_change": 15
         }
       }
+    },
+    {
+      "name": "Rohit",
+      "elo": 1008,
+      "tier": "Bronze",
+      "accuracy": 0.0,
+      "streak": 0,
+      "speed": 0.0,
+      "activity": 0,
+      "quizzes": 0,
+      "badge": "None",
+      "last_active_date": null,
+      "daily_completions": {}
     }
   ],
   "tournament": {
-    "status": "not_started",
-    "players": [],
-    "matches": [],
+    "status": "completed",
+    "players": [
+      "Rohit",
+      "Aman"
+    ],
+    "matches": [
+      {
+        "player1": "Aman",
+        "player2": "Rohit",
+        "result": "draw",
+        "points_p1": 2,
+        "points_p2": 2,
+        "match_id": 0,
+        "played_p1": true,
+        "played_p2": true
+      }
+    ],
     "results": []
   }
 }
