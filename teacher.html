@@ -1,46 +1,521 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduRank — Teacher Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/teacher.css">
-<script src="js/storage.js"></script>
-<script src="js/teacher.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Analytics — EduRank</title>
+  <meta name="description" content="Class analytics dashboard for EduRank teachers. View ELO rankings, at-risk alerts, and accuracy stats for students in your classes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/teacher-dashboard.css">
+  <style>
+    /* ── Class selector ── */
+    .class-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .class-selector-bar label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .class-selector-bar select {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+    }
+    .class-selector-bar select:focus {
+      border-color: var(--accent-green);
+    }
+    .class-selector-bar select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    /* ── Stats grid ── */
+    .analytics-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 20px 18px;
+      text-align: center;
+    }
+    .stat-card .s-num {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 4px;
+    }
+    .stat-card .s-key {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .s-green { color: #4ade80; }
+    .s-red { color: #f87171; }
+    .s-cyan { color: #22d3ee; }
+    .s-white { color: #fff; }
+
+    /* ── At-risk alerts ── */
+    .alert-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .alert-icon { font-size: 1.3rem; }
+    .alert-name { font-weight: 600; margin-bottom: 2px; }
+    .alert-detail { font-size: 0.82rem; color: var(--text-muted); }
+    .alert-elo {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #f87171;
+    }
+    .no-alerts {
+      background: rgba(74,222,128,0.07);
+      border: 1px solid rgba(74,222,128,0.18);
+      border-radius: 10px;
+      padding: 16px 20px;
+      color: #4ade80;
+      font-size: 0.92rem;
+    }
+
+    /* ── Student table ── */
+    .stbl-wrap {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .stbl-head, .stbl-row {
+      display: grid;
+      grid-template-columns: 48px 1fr 90px 90px 90px 70px 80px 110px;
+      gap: 0;
+    }
+    .stbl-head {
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .stbl-head .th {
+      padding: 12px 14px;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .stbl-row {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s;
+    }
+    .stbl-row:last-child { border-bottom: none; }
+    .stbl-row:hover { background: rgba(255,255,255,0.03); }
+    .stbl-row .td {
+      padding: 13px 14px;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+    }
+    .td-rank { color: var(--text-muted); font-size: 0.8rem; }
+    .td-elo, .td-tier { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+    .tier-bronze { color: #cd7f32; }
+    .tier-silver { color: #c0c0c0; }
+    .tier-gold { color: #ffd700; }
+    .tier-platinum { color: #22d3ee; }
+    .tier-diamond { color: #a855f7; }
+    .pred-atrisk { color: #f87171; }
+    .pred-stable { color: #4ade80; }
+    .pred-watch { color: #facc15; }
+
+    /* ── Empty states ── */
+    .analytics-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .analytics-empty .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+    .analytics-empty p { font-size: 1rem; margin-bottom: 8px; color: #ccc; }
+    .analytics-empty small { font-size: 0.85rem; }
+    .analytics-empty .btn-go {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 22px;
+      background: linear-gradient(135deg, #4ade80, #22d3ee);
+      color: #0a0a0f;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
-<body>
-<nav class="topnav">
-  <a href="index.html" class="logo">Edu<span>Rank</span></a>
-  <a href="dashboard.html" class="back-btn">← Dashboard</a>
-</nav>
-<div class="main">
-  <div class="page-label">// Teacher View — Restricted</div>
-  <div class="page-title">📊 Class Intelligence</div>
+<body class="app-page">
 
-  <!-- STATS -->
-  <div class="stats-row anim" id="statsRow"></div>
-
-  <!-- AT RISK ALERTS -->
-  <div class="section-title">🚨 At-Risk Alerts</div>
-  <div class="alerts-wrap" id="alertsWrap"></div>
-
-  <!-- FULL CLASS TABLE -->
-  <div class="section-title">Full Class Overview</div>
-  <div class="table-wrap">
-    <div class="thead">
-      <div class="th">#</div>
-      <div class="th">Student</div>
-      <div class="th">Tier</div>
-      <div class="th">ELO</div>
-      <div class="th">Accuracy</div>
-      <div class="th">Streak</div>
-      <div class="th">Quizzes</div>
-      <div class="th">Prediction</div>
+<!-- NAV -->
+<nav class="app-nav" id="appNav">
+  <div class="app-nav-inner">
+    <a href="landing.html" class="nav-logo">
+      <span class="logo-edu">Edu</span><span class="logo-rank">Rank</span>
+    </a>
+    <div class="app-nav-center">
+      <a href="teacher-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="teacher.html" class="nav-link active">Class Analytics</a>
     </div>
-    <div id="classTable"></div>
+    <div class="app-nav-right">
+      <div class="nav-user-badge">
+        <span class="nub-icon">🧑‍🏫</span>
+        <span id="navUserName">—</span>
+      </div>
+      <button class="nav-logout-btn" onclick="logout()">Logout</button>
+    </div>
   </div>
-</div>
+</nav>
+
+<main class="app-main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-tag">// Class Analytics</div>
+      <h1>📊 Class Intelligence</h1>
+      <p style="color:var(--text-muted);margin-top:4px;font-size:0.9rem;">
+        Analytics are scoped to the selected class only.
+      </p>
+    </div>
+  </div>
+
+  <!-- CLASS SELECTOR -->
+  <div class="class-selector-bar">
+    <label for="classSelect">Select Class:</label>
+    <select id="classSelect" onchange="onClassChange()">
+      <option value="">— Loading classes… —</option>
+    </select>
+    <span id="joinCodeBadge" style="display:none;font-family:'JetBrains Mono',monospace;font-size:0.82rem;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.25);padding:5px 12px;border-radius:6px;color:#4ade80;"></span>
+  </div>
+
+  <!-- ANALYTICS CONTENT -->
+  <div id="analyticsContent">
+    <div class="analytics-empty">
+      <div class="empty-icon">🏫</div>
+      <p>Loading your classes…</p>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/auth.js"></script>
+<script>
+// ============================================================
+// teacher.js — class-scoped analytics (inline)
+// ============================================================
+
+const TEACHER_API = window.location.origin + '/api';
+let teacherUser = null;
+let allMyClasses = [];
+let selectedClassId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Auth guard
+  const token = localStorage.getItem('edurank_token');
+  const userData = localStorage.getItem('edurank_user');
+
+  if (!token || !userData) {
+    window.location.href = 'landing.html';
+    return;
+  }
+
+  teacherUser = JSON.parse(userData);
+
+  if (teacherUser.role !== 'teacher') {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
+  document.getElementById('navUserName').textContent = teacherUser.name;
+
+  await loadMyClasses();
+});
+
+async function loadMyClasses() {
+  const token = localStorage.getItem('edurank_token');
+  try {
+    const res = await fetch(`${TEACHER_API}/classes`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      showAnalyticsEmpty('auth-error');
+      return;
+    }
+    allMyClasses = await res.json();
+    populateClassSelector(allMyClasses);
+  } catch (err) {
+    console.error('Load classes error:', err);
+    showAnalyticsEmpty('connection-error');
+  }
+}
+
+function populateClassSelector(classes) {
+  const sel = document.getElementById('classSelect');
+  if (classes.length === 0) {
+    sel.innerHTML = '<option value="">— No classes yet —</option>';
+    showAnalyticsEmpty('no-classes');
+    return;
+  }
+  sel.innerHTML = '<option value="">— Select a class —</option>' +
+    classes.map(c => `<option value="${c.id}">${escapeHtml(c.name)}${c.subject ? ' · ' + escapeHtml(c.subject) : ''}</option>`).join('');
+  showAnalyticsEmpty('no-selection');
+}
+
+function onClassChange() {
+  const val = document.getElementById('classSelect').value;
+  selectedClassId = val || null;
+  if (!selectedClassId) {
+    document.getElementById('joinCodeBadge').style.display = 'none';
+    showAnalyticsEmpty('no-selection');
+    return;
+  }
+  loadClassAnalytics(selectedClassId);
+}
+
+async function loadClassAnalytics(classId) {
+  const token = localStorage.getItem('edurank_token');
+  const content = document.getElementById('analyticsContent');
+  content.innerHTML = '<div class="analytics-empty"><div class="empty-icon">⏳</div><p>Loading analytics…</p></div>';
+
+  // Show join code badge
+  const cls = allMyClasses.find(c => c.id === classId);
+  if (cls) {
+    const badge = document.getElementById('joinCodeBadge');
+    badge.textContent = `Join Code: ${cls.join_code}`;
+    badge.style.display = 'inline-block';
+  }
+
+  try {
+    const res = await fetch(`${TEACHER_API}/classes/${classId}/students`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      content.innerHTML = '<div class="analytics-empty"><div class="empty-icon">🔒</div><p>Access denied or class not found.</p></div>';
+      return;
+    }
+    const students = await res.json();
+    renderAnalytics(cls, students);
+  } catch (err) {
+    console.error('Load analytics error:', err);
+    content.innerHTML = '<div class="analytics-empty"><div class="empty-icon">❌</div><p>Connection error. Please refresh.</p></div>';
+  }
+}
+
+function renderAnalytics(cls, students) {
+  const content = document.getElementById('analyticsContent');
+
+  if (students.length === 0) {
+    content.innerHTML = `
+      <div class="analytics-empty">
+        <div class="empty-icon">👥</div>
+        <p>No students have joined this class yet.</p>
+        <small>Share the join code <strong style="color:#4ade80">${escapeHtml(cls.join_code)}</strong> with your students.</small>
+      </div>`;
+    return;
+  }
+
+  // Compute stats
+  const atRisk = students.filter(s => predictStudent(s).label === 'At Risk');
+  const avgElo = Math.round(students.reduce((a, s) => a + (s.elo || 1000), 0) / students.length);
+  const avgAcc = Math.round(students.reduce((a, s) => a + (s.accuracy || 0), 0) / students.length);
+  const sorted = [...students].sort((a, b) => (b.elo || 1000) - (a.elo || 1000));
+
+  content.innerHTML = `
+    <!-- STATS -->
+    <div class="analytics-stats">
+      <div class="stat-card">
+        <div class="s-num s-white">${students.length}</div>
+        <div class="s-key">Total Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="s-num s-red">${atRisk.length}</div>
+        <div class="s-key">At Risk</div>
+      </div>
+      <div class="stat-card">
+        <div class="s-num s-green">${avgAcc}%</div>
+        <div class="s-key">Avg Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="s-num s-cyan">${avgElo}</div>
+        <div class="s-key">Avg ELO</div>
+      </div>
+    </div>
+
+    <!-- AT-RISK -->
+    <div class="section-label">🚨 At-Risk Alerts</div>
+    <div id="alertsSection" style="margin-bottom:28px">
+      ${renderAlerts(atRisk)}
+    </div>
+
+    <!-- TABLE -->
+    <div class="section-label">Full Class Overview</div>
+    <div class="stbl-wrap">
+      <div class="stbl-head">
+        <div class="th">#</div>
+        <div class="th">Student</div>
+        <div class="th">Tier</div>
+        <div class="th">ELO</div>
+        <div class="th">Accuracy</div>
+        <div class="th">Streak</div>
+        <div class="th">Quizzes</div>
+        <div class="th">Prediction</div>
+      </div>
+      <div id="studentsTableBody">
+        ${sorted.map((s, i) => renderStudentRow(s, i)).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderAlerts(atRisk) {
+  if (atRisk.length === 0) {
+    return '<div class="no-alerts">✅ No at-risk students detected. Class is performing well.</div>';
+  }
+  return atRisk.map(s => `
+    <div class="alert-card">
+      <div class="alert-icon">🚨</div>
+      <div>
+        <div class="alert-name">${escapeHtml(s.name)} — Needs Attention</div>
+        <div class="alert-detail">Accuracy: ${s.accuracy || 0}% · Streak: ${s.streak || 0} days · Quizzes: ${s.quizzes || 0}</div>
+      </div>
+      <div class="alert-elo">${s.elo || 1000}</div>
+    </div>
+  `).join('');
+}
+
+function renderStudentRow(s, i) {
+  const tier = getTier(s.elo || 1000);
+  const tierClass = 'tier-' + tier.toLowerCase();
+  const pred = predictStudent(s);
+  const predClass = pred.label === 'At Risk' ? 'pred-atrisk' : (pred.label === 'Watch' ? 'pred-watch' : 'pred-stable');
+  return `
+    <div class="stbl-row">
+      <div class="td td-rank">${i + 1}</div>
+      <div class="td">${escapeHtml(s.name)}</div>
+      <div class="td td-tier ${tierClass}">${tier}</div>
+      <div class="td td-elo ${tierClass}">${s.elo || 1000}</div>
+      <div class="td">${s.accuracy || 0}%</div>
+      <div class="td">🔥${s.streak || 0}</div>
+      <div class="td">${s.quizzes || 0}</div>
+      <div class="td ${predClass}">${pred.icon} ${pred.label}</div>
+    </div>
+  `;
+}
+
+function showAnalyticsEmpty(type) {
+  const content = document.getElementById('analyticsContent');
+  const msgs = {
+    'no-classes': {
+      icon: '🏫',
+      title: 'No classes yet.',
+      sub: 'Create your first class to start managing your students.',
+      btn: '<a href="teacher-dashboard.html" class="btn-go">Go to Dashboard</a>'
+    },
+    'no-selection': {
+      icon: '📊',
+      title: 'Select a class to view analytics.',
+      sub: 'Use the dropdown above to choose a class.',
+      btn: ''
+    },
+    'auth-error': {
+      icon: '🔒',
+      title: 'Authentication error.',
+      sub: 'Please log in again.',
+      btn: '<a href="landing.html" class="btn-go">Login</a>'
+    },
+    'connection-error': {
+      icon: '❌',
+      title: 'Cannot connect to server.',
+      sub: 'Make sure the Flask server is running.',
+      btn: ''
+    }
+  };
+  const m = msgs[type] || msgs['no-selection'];
+  content.innerHTML = `
+    <div class="analytics-empty">
+      <div class="empty-icon">${m.icon}</div>
+      <p>${m.title}</p>
+      <small>${m.sub}</small>
+      ${m.btn}
+    </div>
+  `;
+}
+
+// ── Prediction logic ──
+function predictStudent(s) {
+  const elo = s.elo || 1000;
+  const acc = s.accuracy || 0;
+  const streak = s.streak || 0;
+  const quizzes = s.quizzes || 0;
+  let score = 0;
+  if (elo < 1000) score += 2;
+  else if (elo < 1100) score += 1;
+  if (acc < 30) score += 2;
+  else if (acc < 50) score += 1;
+  if (streak === 0 && quizzes > 0) score += 1;
+  if (score >= 3) return { label: 'At Risk', icon: '🔴', color: '#f87171' };
+  if (score === 2) return { label: 'Watch', icon: '🟡', color: '#facc15' };
+  return { label: 'On Track', icon: '🟢', color: '#4ade80' };
+}
+
+// ── Tier logic ──
+function getTier(elo) {
+  if (elo < 1200) return 'Bronze';
+  if (elo < 1400) return 'Silver';
+  if (elo < 1600) return 'Gold';
+  if (elo < 1800) return 'Platinum';
+  return 'Diamond';
+}
+
+// ── Escape HTML ──
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+</script>
 </body>
 </html>

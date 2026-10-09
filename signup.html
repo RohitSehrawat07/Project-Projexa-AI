@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — EduRank</title>
+  <meta name="description" content="Create your EduRank account as a teacher or student.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-layout">
+
+  <!-- Left panel: branding -->
+  <div class="auth-brand-panel">
+    <a href="landing.html" class="auth-logo">
+      <span class="logo-edu">Edu</span><span class="logo-rank">Rank</span>
+    </a>
+    <div class="auth-brand-content">
+      <h2>Start your classroom<br>transformation today.</h2>
+      <p>Join EduRank and make assessments competitive, measurable, and engaging — for both teachers and students.</p>
+      <div class="auth-brand-features">
+        <div class="abf-item"><span class="abf-icon">♟️</span> ELO rating system</div>
+        <div class="abf-item"><span class="abf-icon">📊</span> Teacher analytics</div>
+        <div class="abf-item"><span class="abf-icon">🏆</span> Class leaderboards</div>
+        <div class="abf-item"><span class="abf-icon">⚡</span> Daily challenges</div>
+      </div>
+    </div>
+    <div class="auth-brand-footer">Free plan available. No credit card required.</div>
+  </div>
+
+  <!-- Right panel: form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-container">
+
+      <!-- Role selector -->
+      <div class="role-selector" id="roleSelector">
+        <div class="role-header">
+          <h1>Create your account</h1>
+          <p>Choose your account type to get started</p>
+        </div>
+        <div class="role-cards">
+          <button class="role-card" id="roleTeacher" onclick="selectRole('teacher')">
+            <div class="role-card-icon">🧑‍🏫</div>
+            <div class="role-card-title">Teacher / Institution</div>
+            <div class="role-card-desc">Create classes, manage students, and view analytics</div>
+            <div class="role-card-badge">Primary</div>
+          </button>
+          <button class="role-card" id="roleStudent" onclick="selectRole('student')">
+            <div class="role-card-icon">🎓</div>
+            <div class="role-card-title">Student</div>
+            <div class="role-card-desc">Join your class and start competing with classmates</div>
+          </button>
+        </div>
+        <div class="auth-switch-link">
+          Already have an account? <a href="index.html">Log in</a>
+        </div>
+      </div>
+
+      <!-- Registration form (hidden until role chosen) -->
+      <form class="register-form" id="registerForm" style="display:none" novalidate>
+        <div class="form-header">
+          <button type="button" class="back-btn" onclick="goBackToRoles()" id="backBtn">
+            ← Back
+          </button>
+          <div class="selected-role-badge" id="selectedRoleBadge"></div>
+          <h1 id="formTitle">Create Account</h1>
+          <p id="formSubtitle">Fill in your details to get started</p>
+        </div>
+
+        <!-- Name -->
+        <div class="form-group">
+          <label for="regName">Full Name</label>
+          <input
+            type="text"
+            id="regName"
+            name="name"
+            placeholder="Your full name"
+            maxlength="80"
+            autocomplete="name"
+            required
+          >
+          <div class="field-error" id="nameError"></div>
+        </div>
+
+        <!-- Institution (teacher only) -->
+        <div class="form-group" id="institutionGroup" style="display:none">
+          <label for="regInstitution">Institution / College Name <span class="optional">(optional)</span></label>
+          <input
+            type="text"
+            id="regInstitution"
+            name="institution"
+            placeholder="e.g. ABC Institute of Technology"
+            maxlength="120"
+          >
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="regEmail">Email Address</label>
+          <input
+            type="email"
+            id="regEmail"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+          <div class="field-error" id="emailError"></div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="regPassword">Password</label>
+          <div class="password-wrap">
+            <input
+              type="password"
+              id="regPassword"
+              name="password"
+              placeholder="At least 6 characters"
+              autocomplete="new-password"
+              required
+            >
+            <button type="button" class="pw-toggle" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+              <span id="pwEye">👁️</span>
+            </button>
+          </div>
+          <div class="field-error" id="passwordError"></div>
+        </div>
+
+        <!-- Join code (student only) -->
+        <div class="form-group" id="joinCodeGroup" style="display:none">
+          <label for="regJoinCode">Class Join Code <span class="optional">(optional — you can join later)</span></label>
+          <input
+            type="text"
+            id="regJoinCode"
+            name="join_code"
+            placeholder="e.g. ABC-PY24"
+            maxlength="10"
+            style="text-transform:uppercase;letter-spacing:0.1em;font-family:var(--font-mono, monospace)"
+          >
+          <div class="field-hint">Ask your teacher for the join code</div>
+        </div>
+
+        <!-- General error -->
+        <div class="form-error" id="formError" style="display:none"></div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span id="submitText">Create Account</span>
+          <span id="submitSpinner" style="display:none">⏳</span>
+        </button>
+
+        <div class="auth-switch-link">
+          Already have an account? <a href="index.html">Log in</a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Pre-select role from URL param if provided
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role');
+    if (role === 'teacher' || role === 'student') {
+      selectRole(role);
+    }
+    // Redirect if already logged in
+    const token = localStorage.getItem('edurank_token');
+    const userData = localStorage.getItem('edurank_user');
+    if (token && userData) {
+      const user = JSON.parse(userData);
+      window.location.href = user.role === 'teacher' ? 'teacher-dashboard.html' : 'dashboard.html';
+    }
+  });
+</script>
+</body>
+</html>

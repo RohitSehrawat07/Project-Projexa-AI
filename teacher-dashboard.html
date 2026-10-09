@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard — EduRank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/teacher-dashboard.css">
+</head>
+<body class="app-page">
+
+<!-- NAV -->
+<nav class="app-nav" id="appNav">
+  <div class="app-nav-inner">
+    <a href="landing.html" class="nav-logo">
+      <span class="logo-edu">Edu</span><span class="logo-rank">Rank</span>
+    </a>
+    <div class="app-nav-center">
+      <a href="teacher-dashboard.html" class="nav-link active">Dashboard</a>
+      <a href="teacher.html" class="nav-link">Class Analytics</a>
+    </div>
+    <div class="app-nav-right">
+      <div class="nav-user-badge">
+        <span class="nub-icon">🧑‍🏫</span>
+        <span id="navUserName">—</span>
+      </div>
+      <button class="nav-logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<main class="app-main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-tag">// Teacher Dashboard</div>
+      <h1>Welcome, <span id="teacherName" class="highlight-name">—</span> 👋</h1>
+      <p id="institutionLabel" class="inst-label"></p>
+    </div>
+    <button class="btn-create-class" onclick="openCreateClassModal()" id="createClassBtn">
+      + Create Class
+    </button>
+  </div>
+
+  <!-- MY CLASSES -->
+  <section class="dashboard-section">
+    <div class="ds-header">
+      <h2>My Classes</h2>
+      <span class="ds-count" id="classCount">0 classes</span>
+    </div>
+    <div id="classGrid" class="class-grid">
+      <div class="loading-state">Loading classes...</div>
+    </div>
+  </section>
+
+  <!-- FULL ANALYTICS LINK -->
+  <section class="dashboard-section">
+    <div class="ds-header">
+      <h2>Class Analytics</h2>
+    </div>
+    <div class="analytics-shortcut">
+      <div class="as-icon">📊</div>
+      <div class="as-content">
+        <div class="as-title">Full Class Intelligence</div>
+        <div class="as-desc">View ELO rankings, at-risk alerts, accuracy stats, and AI predictions for all students in your classes.</div>
+      </div>
+      <a href="teacher.html" class="btn-view-analytics">View Analytics →</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- CREATE CLASS MODAL -->
+<div class="modal-overlay" id="createClassModal" onclick="closeModalOnOverlay(event, 'createClassModal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('createClassModal')">✕</button>
+    <h2 class="modal-title">Create a New Class</h2>
+    <p class="modal-sub">Students will use a join code to join your class.</p>
+
+    <div class="form-group">
+      <label for="newClassName">Class Name *</label>
+      <input type="text" id="newClassName" placeholder="e.g. BCA 1st Year — Python" maxlength="100">
+    </div>
+    <div class="form-group">
+      <label for="newInstitution">Institution Name</label>
+      <input type="text" id="newInstitution" placeholder="e.g. ABC Institute of Technology" maxlength="120">
+    </div>
+    <div class="form-group">
+      <label for="newSubject">Subject / Topic <span class="optional">(optional)</span></label>
+      <input type="text" id="newSubject" placeholder="e.g. Data Structures" maxlength="80">
+    </div>
+    <div class="modal-error" id="modalError" style="display:none"></div>
+    <button class="btn-submit" onclick="submitCreateClass()" id="createClassSubmitBtn">
+      <span id="createClassText">Create Class</span>
+      <span id="createClassSpinner" style="display:none">⏳</span>
+    </button>
+  </div>
+</div>
+
+<!-- JOIN CODE MODAL -->
+<div class="modal-overlay" id="joinCodeModal" onclick="closeModalOnOverlay(event, 'joinCodeModal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('joinCodeModal')">✕</button>
+    <div class="jc-icon">🔗</div>
+    <h2 class="modal-title">Class Created!</h2>
+    <p class="modal-sub">Share this code with your students</p>
+    <div class="join-code-display" id="joinCodeDisplay">—</div>
+    <p class="jc-hint">Students enter this code on the signup page or their dashboard to join your class.</p>
+    <button class="btn-submit" onclick="copyJoinCode()">📋 Copy Code</button>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/teacher-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{
+  "users": [
+    {
+      "id": "c76391e9-ee6c-410a-b035-edeba6038197",
+      "name": "T1",
+      "email": "t1@ttgmial.com",
+      "password_hash": "scrypt:32768:8:1$qEhN2XS4WblGHiF4$a8fe755d2468f0fc532be0d4e0f03ab4789fea601176970fd725500d9d5c03c32840d39943a04c6182fc519ab79857a53d491617ca9ab8561079d7bead127362",
+      "role": "teacher",
+      "created_at": "2026-09-30T03:54:41.957082",
+      "class_ids": [],
+      "institution": null
+    },
+    {
+      "id": "80a6f56e-c05e-473a-895b-55256045ed0d",
+      "name": "teacher_test",
+      "email": "teacher_test@example.com",
+      "password_hash": "scrypt:32768:8:1$iQi2xlk0VFc3yxV2$8916afa92cf12eb463cbdb1a0996a78bcb84cd765a67ee92c5529b17ad1ede63889533d28f6abbdaea6215841db300f00d9a3568813ffd2a00a21a1752bb5688",
+      "role": "teacher",
+      "created_at": "2026-09-30T04:20:50.987673",
+      "class_ids": [
+        "9fb08918-a502-4abc-9f80-0697f55a1b22",
+        "df17b23e-eef9-46a4-8b50-22a84e538f02"
+      ],
+      "institution": null
+    },
+    {
+      "id": "e29324b9-d7d9-4d8c-9eb1-a252769176c0",
+      "name": "TeacherB",
+      "email": "teacherb@example.com",
+      "password_hash": "scrypt:32768:8:1$YpN33wUotKS6HxBh$7b0dd360c5b4815e88a9a3cb64d7eae5e21a20db24f10c07025de7172227a649e8838f315b016eff6a5435621dfa939d2183cb89ba5d98d005e5b1595f7732fd",
+      "role": "teacher",
+      "created_at": "2026-09-30T04:22:09.134894",
+      "class_ids": [],
+      "institution": null
+    },
+    {
+      "id": "38da291a-5da7-4115-b834-6be6d274b861",
+      "name": "TestStudentAlice",
+      "email": "alice@test.com",
+      "password_hash": "scrypt:32768:8:1$rXyH2PCOJWIbMmuE$fb68fc9a3c3090c0f331f1dbd9af37364dcebc8c2acfe7cf1b05fb57a5d6785c869cd1f7bf86c5b88ee17e5f906ffbda3f7413f1a29317998ebbf74a90d5a69d",
+      "role": "student",
+      "created_at": "2026-09-30T04:34:01.506081",
+      "class_ids": [
+        "9fb08918-a502-4abc-9f80-0697f55a1b22"
+      ],
+      "institution": null
+    }
+  ]
+}

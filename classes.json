@@ -1,0 +1,26 @@
+{
+  "classes": [
+    {
+      "id": "9fb08918-a502-4abc-9f80-0697f55a1b22",
+      "name": "BCA 1st Year - Python",
+      "institution": "Test Institute",
+      "subject": "Python Programming",
+      "teacher_id": "80a6f56e-c05e-473a-895b-55256045ed0d",
+      "join_code": "TKK-K5Z9",
+      "student_ids": [
+        "38da291a-5da7-4115-b834-6be6d274b861"
+      ],
+      "created_at": "2026-09-30T04:21:06.495508"
+    },
+    {
+      "id": "df17b23e-eef9-46a4-8b50-22a84e538f02",
+      "name": "Data Structures Batch B",
+      "institution": "Test College",
+      "subject": "DSA",
+      "teacher_id": "80a6f56e-c05e-473a-895b-55256045ed0d",
+      "join_code": "ULT-1R7B",
+      "student_ids": [],
+      "created_at": "2026-09-30T04:33:05.644350"
+    }
+  ]
+}

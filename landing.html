@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduRank — Gamified Learning & Student Performance Platform</title>
+  <meta name="description" content="EduRank helps educational institutes make learning more engaging through competitive assessments while giving teachers clear insights into student performance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<header class="nav-header" id="siteHeader">
+  <nav class="nav-container">
+    <a href="landing.html" class="nav-logo" aria-label="EduRank home">
+      <span class="logo-edu">Edu</span><span class="logo-rank">Rank</span>
+    </a>
+    <ul class="nav-links" id="navLinks" role="navigation" aria-label="Primary navigation">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-ctas">
+      <a href="index.html" class="btn-ghost" id="navLogin">Login</a>
+      <a href="signup.html" class="btn-primary-sm" id="navGetStarted">Get Started</a>
+    </div>
+    <button class="nav-hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero-section" id="home">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Gamified Learning Platform
+    </div>
+
+    <h1 class="hero-headline">
+      Make Learning<br>
+      <span class="gradient-text">Competitive &amp; Measurable</span>
+    </h1>
+
+    <p class="hero-sub">
+      EduRank helps educational institutes make learning more engaging through competitive assessments while giving teachers clear insights into student performance.
+    </p>
+
+    <div class="hero-actions">
+      <a href="signup.html" class="btn-hero-primary" id="heroGetStarted">
+        Get Started
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#pricing" class="btn-hero-secondary">View Pricing</a>
+    </div>
+
+    <!-- Hero demo card -->
+    <div class="hero-demo">
+      <div class="demo-card demo-card-1">
+        <div class="demo-card-header">
+          <span class="demo-dot green"></span>
+          <span class="demo-label">Class Performance</span>
+        </div>
+        <div class="demo-stats">
+          <div class="demo-stat">
+            <div class="demo-stat-val">28</div>
+            <div class="demo-stat-key">Students</div>
+          </div>
+          <div class="demo-stat">
+            <div class="demo-stat-val">73%</div>
+            <div class="demo-stat-key">Avg Accuracy</div>
+          </div>
+          <div class="demo-stat">
+            <div class="demo-stat-val">4</div>
+            <div class="demo-stat-key">At Risk</div>
+          </div>
+        </div>
+        <div class="demo-progress-list">
+          <div class="demo-progress-row">
+            <span>Priya S.</span>
+            <div class="dp-bar-bg"><div class="dp-bar" style="width:92%;background:var(--green)"></div></div>
+            <span class="dp-pct">92%</span>
+          </div>
+          <div class="demo-progress-row">
+            <span>Rahul V.</span>
+            <div class="dp-bar-bg"><div class="dp-bar" style="width:78%;background:var(--green)"></div></div>
+            <span class="dp-pct">78%</span>
+          </div>
+          <div class="demo-progress-row at-risk">
+            <span>Karan M.</span>
+            <div class="dp-bar-bg"><div class="dp-bar" style="width:31%;background:var(--red)"></div></div>
+            <span class="dp-pct red">31%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-card demo-card-2">
+        <div class="demo-card-header">
+          <span class="demo-dot cyan"></span>
+          <span class="demo-label">Student ELO Card</span>
+        </div>
+        <div class="demo-elo-display">
+          <div class="demo-elo-num">1,842</div>
+          <div class="demo-tier">⬡ Gold Tier</div>
+        </div>
+        <div class="demo-elo-stats">
+          <div class="des-item"><div class="des-val">94%</div><div class="des-key">Accuracy</div></div>
+          <div class="des-item"><div class="des-val">12</div><div class="des-key">Day Streak</div></div>
+          <div class="des-item"><div class="des-val">#3</div><div class="des-key">Rank</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="section" id="how-it-works">
+  <div class="section-container">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Simple for teachers.<br>Engaging for students.</h2>
+    <p class="section-sub">A workflow designed to add gamification to your existing teaching — without replacing it.</p>
+
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-icon">🏫</div>
+        <div class="step-num">01</div>
+        <h3>Teacher creates a class</h3>
+        <p>Set up your class with your institution name. A unique join code is generated automatically.</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">📝</div>
+        <div class="step-num">02</div>
+        <h3>Create quizzes</h3>
+        <p>Build assessments from the question bank across easy, medium, and hard difficulty levels.</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">🔗</div>
+        <div class="step-num">03</div>
+        <h3>Students join online</h3>
+        <p>Students sign up and enter the join code to access their class environment from any device.</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">⚔️</div>
+        <div class="step-num">04</div>
+        <h3>Students compete &amp; learn</h3>
+        <p>Students take quizzes, earn ELO points, climb leaderboards, and complete daily challenges.</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-icon">📊</div>
+        <div class="step-num">05</div>
+        <h3>Teacher sees analytics</h3>
+        <p>Real-time class performance, at-risk student alerts, and individual student progress data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FEATURES ========== -->
+<section class="section features-section" id="features">
+  <div class="section-container">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything in one platform</h2>
+
+    <div class="features-split">
+      <!-- Student Features -->
+      <div class="feature-column">
+        <div class="feature-col-header">
+          <span class="feature-role-badge student">For Students</span>
+          <h3>Learn through competition</h3>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="fi-icon">⏱️</div>
+            <div class="fi-content">
+              <div class="fi-title">Timed Quizzes</div>
+              <div class="fi-desc">Ranked assessments that affect your ELO rating based on difficulty and accuracy.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">♟️</div>
+            <div class="fi-content">
+              <div class="fi-title">ELO Rating System</div>
+              <div class="fi-desc">Dynamic ratings from Bronze to Diamond. Fair, skill-based, and motivating.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">🏆</div>
+            <div class="fi-content">
+              <div class="fi-title">Class Leaderboards</div>
+              <div class="fi-desc">See where you stand in your class. Challenge the students ranked above you.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">⚡</div>
+            <div class="fi-content">
+              <div class="fi-title">Daily Challenges</div>
+              <div class="fi-desc">One question per day. Correct answers boost ELO. Build streaks for bonus rewards.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">🥊</div>
+            <div class="fi-content">
+              <div class="fi-title">Tournaments</div>
+              <div class="fi-desc">Round-robin competitions between classmates with ELO stakes and champion badges.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">📈</div>
+            <div class="fi-content">
+              <div class="fi-title">Progress Tracking</div>
+              <div class="fi-desc">Track your accuracy, speed, streak, and ELO over time. See your improvement clearly.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teacher Features -->
+      <div class="feature-column">
+        <div class="feature-col-header">
+          <span class="feature-role-badge teacher">For Teachers</span>
+          <h3>Analytics that actually help</h3>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="fi-icon">🏫</div>
+            <div class="fi-content">
+              <div class="fi-title">Class Management</div>
+              <div class="fi-desc">Create classes, generate join codes, and manage your students in one place.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">✏️</div>
+            <div class="fi-content">
+              <div class="fi-title">Quiz Creation</div>
+              <div class="fi-desc">Build quizzes from the question bank or create custom assessments for your class.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">⚡</div>
+            <div class="fi-content">
+              <div class="fi-title">Automatic Results</div>
+              <div class="fi-desc">Quizzes are auto-graded. No manual checking. ELO updates happen in real time.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">📊</div>
+            <div class="fi-content">
+              <div class="fi-title">Performance Analytics</div>
+              <div class="fi-desc">Class-wide accuracy, individual student stats, and trend data in your dashboard.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">🚨</div>
+            <div class="fi-content">
+              <div class="fi-title">At-Risk Alerts</div>
+              <div class="fi-desc">AI-based predictions identify students likely to fall behind so you can intervene early.</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="fi-icon">🎯</div>
+            <div class="fi-content">
+              <div class="fi-title">Class Leaderboard View</div>
+              <div class="fi-desc">See the full class ELO ranking, tier distribution, and quiz completion rates at a glance.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHY EDURANK ========== -->
+<section class="section why-section">
+  <div class="section-container">
+    <div class="section-label">Why EduRank</div>
+    <h2 class="section-title">Built for real educational outcomes</h2>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🎮</div>
+        <h3>Engagement through competition</h3>
+        <p>ELO ratings, tiers, and leaderboards create a competitive environment that motivates students to keep learning — not just to pass, but to improve their rank.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📏</div>
+        <h3>Measurable progress</h3>
+        <p>ELO is a proven rating system used in chess and other competitive domains. It gives a clear, honest signal of where each student stands and how they're improving.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔍</div>
+        <h3>Actionable analytics</h3>
+        <p>Teachers see not just scores, but patterns — which students are consistent, which are declining, and which need attention before they fall too far behind.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🏗️</div>
+        <h3>Simple to deploy</h3>
+        <p>No complex integrations. Teachers sign up, create a class, share a join code. Students are up and competing within minutes — no training required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRICING ========== -->
+<section class="section pricing-section" id="pricing">
+  <div class="section-container">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, transparent plans</h2>
+    <p class="section-sub">Start free. Upgrade as your institution grows. No hidden fees.</p>
+    <p class="pricing-note">⚠️ Prices shown are placeholder estimates. Final pricing has not been determined.</p>
+
+    <div class="pricing-grid" id="pricingGrid">
+      <!-- Populated by JS from /api/plans -->
+      <div class="pricing-loading">Loading plans...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA SECTION ========== -->
+<section class="section cta-section">
+  <div class="section-container">
+    <div class="cta-box">
+      <h2>Ready to make your classroom more engaging?</h2>
+      <p>Start with a free class. No credit card required.</p>
+      <div class="cta-actions">
+        <a href="signup.html?role=teacher" class="btn-hero-primary" id="ctaTeacherBtn">
+          Get Started as Teacher
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="signup.html?role=student" class="btn-hero-secondary" id="ctaStudentBtn">Join as Student</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <div class="footer-logo"><span class="logo-edu">Edu</span><span class="logo-rank">Rank</span></div>
+      <p class="footer-tagline">Gamified Learning &amp; Student Performance Platform</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <div class="footer-col-title">Platform</div>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Account</div>
+        <a href="signup.html?role=teacher">Teacher Sign Up</a>
+        <a href="signup.html?role=student">Student Sign Up</a>
+        <a href="index.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">For Institutions</div>
+        <a href="#pricing">Colleges</a>
+        <a href="#pricing">Coaching Institutes</a>
+        <a href="#pricing">Training Centres</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 EduRank. Built for education.</span>
+    <span class="footer-phase">Phase 1 — Foundation</span>
+  </div>
+</footer>
+
+<script src="js/landing.js"></script>
+</body>
+</html>
