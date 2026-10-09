@@ -44,6 +44,16 @@
         "9fb08918-a502-4abc-9f80-0697f55a1b22"
       ],
       "institution": null
+    },
+    {
+      "id": "b8617b1d-da2a-4f65-8b31-14f57389a030",
+      "name": "Aman Rawat",
+      "email": "www.ssrawatrawat@gmail.com",
+      "password_hash": "scrypt:32768:8:1$Uw2RnKFHIu2sWHP1$87a2c80df956860a5c411a78d18917c63d11a042941024a0771d7fce1252e287cca3cba6f8d8cd35e0880d96606c61582d19711925d913188cdd832b439b1721",
+      "role": "teacher",
+      "created_at": "2026-10-09T12:24:51.182987",
+      "class_ids": [],
+      "institution": null
     }
   ]
 }
